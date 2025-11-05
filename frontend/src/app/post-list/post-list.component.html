@@ -1,0 +1,12 @@
+<p>post-list works!</p>
+@if (postsList) {
+@for (post of postsList; track post.id) {
+<h3>{{ post.name}}</h3>
+<!-- תמונה -->
+<!-- אם אפשר לעשות ככה צריך למחוק את היוזר ניים -->
+<h2>{{post.user.name}}</h2>
+<!-- כפתור של כניסה לפוסט -->
+}
+
+
+}

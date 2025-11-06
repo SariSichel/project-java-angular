@@ -9,6 +9,7 @@ import { CategoriesService } from '../services/categories.service';
   styleUrl: './category-list.component.css'
 })
 export class CategoryListComponent {
+  
   public categoriesList!:Category[]
 
   constructor(private _categoryService: CategoriesService){}

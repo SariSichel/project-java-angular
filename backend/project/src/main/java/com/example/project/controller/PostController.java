@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/Post")
@@ -34,17 +35,6 @@ public class PostController {
     UserMapper userMapper;
     CategoryMapper categoryMapper;
     CommentMapper commentMapper;
-
-
-    @GetMapping("/audio/{audioPath}")
-    public ResponseEntity<Resource> getReport(@PathVariable String audioPath) throws IOException {
-        InputStreamResource resource= AudioUtils.getAudio(audioPath);
-
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + audioPath + "\"")
-                .contentType(MediaType.parseMediaType("audio/mpeg"))
-                .body(resource);
-    }
 
     @Autowired
     public PostController(PostRepository postRepository, PostMapper postMapper, UserMapper userMapper, CategoryMapper categoryMapper, CommentMapper commentMapper) {
@@ -68,6 +58,15 @@ public class PostController {
     }
 }
 
+    @GetMapping("/getPosts")
+    public ResponseEntity <List<Post>> getPosts(){
+        try{
+            return new ResponseEntity<>(postRepository.findAll(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping("/addPost")
     public ResponseEntity<Post> addPost(@RequestPart("photo") MultipartFile photo, @RequestPart("post") Post p, @RequestPart("audio") MultipartFile audio){
         try{
@@ -88,6 +87,16 @@ public class PostController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 }
+
+    @GetMapping("/audio/{audioPath}")
+    public ResponseEntity<Resource> getReport(@PathVariable String audioPath) throws IOException {
+        InputStreamResource resource= AudioUtils.getAudio(audioPath);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + audioPath + "\"")
+                .contentType(MediaType.parseMediaType("audio/mpeg"))
+                .body(resource);
+    }
 
 
 }

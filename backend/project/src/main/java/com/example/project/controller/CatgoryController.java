@@ -3,6 +3,7 @@ package com.example.project.controller;
 import com.example.project.dto.CategoryDTO;
 import com.example.project.mappers.CategoryMapper;
 import com.example.project.model.Category;
+import com.example.project.model.Post;
 import com.example.project.service.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,6 +44,17 @@ public class CatgoryController {
         try {
             Category c = categoryRepository.save(t);
             return new ResponseEntity<>(c, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    //הפונקציה רצה טוב אבל מחזירה שדות null
+    //החזרתי מסוג קטגוריה רגילה
+    @GetMapping("/getCategories")
+    public ResponseEntity <List<CategoryDTO>> getCategories(){
+        try{
+            return new ResponseEntity<>(categoryMapper.categoriesToDTO(categoryRepository.findAll()), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

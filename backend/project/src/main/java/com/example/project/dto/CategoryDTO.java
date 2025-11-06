@@ -2,7 +2,7 @@ package com.example.project.dto;
 
 public class CategoryDTO {
     private int Id;
-    private String Name;
+    private String name;
 
 
     public int getId() {
@@ -14,11 +14,11 @@ public class CategoryDTO {
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        name = name;
     }
 }
 

@@ -39,21 +39,22 @@ public class Users {
 
     }
 
-    public int getUserId() {
+    public int getId() {
         return Id;
     }
 
-    public void setUserId(int userId) {
-        this.Id = userId;
+    public void setId(int id) {
+        Id = id;
     }
 
-    public String getUserName() {
+    public String getName() {
         return Name;
     }
 
-    public void setUserName(String userName) {
-        this.Name = userName;
+    public void setName(String name) {
+        Name = name;
     }
+
 
     public String getMail() {
         return mail;

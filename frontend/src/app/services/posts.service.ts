@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
+
 export class PostsService {
 
   constructor(private _httpClient:HttpClient) { }
@@ -20,8 +21,8 @@ export class PostsService {
   }
 
 
-  addPostToServer(post:Post):Observable<Post>{
-    return this._httpClient.post<Post>(`http://localhost:8080/api/Post/addPost`,post)
+    addPostToServer(formData: FormData): Observable<Post> {
+    return this._httpClient.post<Post>(`http://localhost:8080/api/Post/addPost`, formData);
   }
 
 }

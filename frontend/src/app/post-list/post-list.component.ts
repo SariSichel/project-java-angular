@@ -33,10 +33,9 @@ constructor(private _postService: PostsService){}
     + this.postsList[index].audio+", "
     + this.postsList[index].uploadDate+", "
     + this.postsList[index].updateDate+", "
-    + this.postsList[index].photo+", "
+    + this.postsList[index].photoPath+", "
     + this.postsList[index].user+", "
     + this.postsList[index].category + ", " 
   }
-
 
 }

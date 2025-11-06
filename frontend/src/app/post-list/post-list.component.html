@@ -2,11 +2,11 @@
 @if (postsList) {
 @for (post of postsList; track post.id) {
 <h3>{{ post.name}}</h3>
-<!-- תמונה -->
+
+<img [src]="'data:image/jpeg;base64,' + post.photoPath" width="300" style="height:auto;" />
+
 <!-- אם אפשר לעשות ככה צריך למחוק את היוזר ניים -->
 <h2>{{post.user.name}}</h2>
 <!-- כפתור של כניסה לפוסט -->
 }
-
-
 }

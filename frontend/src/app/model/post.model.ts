@@ -13,13 +13,11 @@ export default class Post{
     uploadDate!: Date
     updateDate?:Date
     //אותן שאלות על התמונה
-    photo?:string
+    photoPath?:string
     user!:User
     category!:CategoryName
     // לבדוק אם לשנות את זה לסטרינג
     usersTookPart!:string
     comments!:Comment[]
-
-
 
 }

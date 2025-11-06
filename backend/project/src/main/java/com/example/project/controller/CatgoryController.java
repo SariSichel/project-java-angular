@@ -54,9 +54,12 @@ public class CatgoryController {
     @GetMapping("/getCategories")
     public ResponseEntity <List<CategoryDTO>> getCategories(){
         try{
-            return new ResponseEntity<>(categoryMapper.categoriesToDTO(categoryRepository.findAll()), HttpStatus.OK);
+            List<Category> c1=categoryRepository.findAll();
+            List<CategoryDTO> c=categoryMapper.categoriesToDTO(c1);
+            return new ResponseEntity<>(c, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
     }
 }

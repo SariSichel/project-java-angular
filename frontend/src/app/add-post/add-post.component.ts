@@ -15,8 +15,11 @@ import { PostsService } from '../services/posts.service';
 export class AddPostComponent {
 
   public categoriesList:Category[]=[]
+  public selectedPhoto: File | null = null;
+  public selectedAudio: File | null = null;
 
-  constructor(private _categoryService: CategoriesService,private _postService: PostsService) { }
+  constructor(private _categoryService: CategoriesService,
+              private _postService: PostsService) { }
 
   ngOnInit():void{
     this._categoryService.getCategoriesFromServer().subscribe({
@@ -35,20 +38,52 @@ export class AddPostComponent {
     lyrics:"",
     audio:"",
     uploadDate:new Date(),
-    photo:"",
+    photoPath:"",
     //צריך לתפוס יוזר מהלוקאל סטוראג
-     user:{id:1,name:"",mail:"",photoPath:""},
-     category:this.categoriesList[0],
+    user:{id:1,name:"",mail:"",photoPath:""},
+    category:this.categoriesList[0],
     usersTookPart:"",
     comments:[]
   }
 
-  addPost(post:Post){
-    this._postService.addPostToServer(this.newPost).subscribe({
-      next:(res)=>{
+    onFileSelected(event: any, type: 'photo' | 'audio') {
+    const file = event.target.files[0];
+    if (type === 'photo') this.selectedPhoto = file;
+    else this.selectedAudio = file;
+  }
+
+
+  addPost() {
+    if (!this.selectedPhoto || !this.selectedAudio) {
+      alert("Please select both photo and audio files before uploading");
+      return;
+    }
+
+    const formData = new FormData();
+
+    // מוסיפים קבצים
+    formData.append("photo", this.selectedPhoto);
+    formData.append("audio", this.selectedAudio);
+
+    // מוסיפים את אובייקט הפוסט כ-JSON
+    formData.append("post", new Blob([JSON.stringify({name:this.newPost.name,
+                                                      description:this.newPost.description
+                                                      ,lyrics:this.newPost.lyrics
+                                                      ,uploadDate:this.newPost.uploadDate
+                                                      ,user:this.newPost.user
+                                                    ,category:this.newPost.category
+                                                    ,usersTookPart:this.newPost.usersTookPart
+                                                    ,comments:this.newPost.comments})], { type: 'application/json' }));
+
+    // שליחה לשרת
+    this._postService.addPostToServer(formData).subscribe({
+      next: (res) => {
+        alert("Post uploaded successfully!");
       },
-      error:(err)=>{
+      error: (err) => {
+        console.error(err);
+        alert("Failed to upload post");
       }
-    }) 
+    });
 }
 }

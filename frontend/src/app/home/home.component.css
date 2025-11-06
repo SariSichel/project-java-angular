@@ -1,0 +1,46 @@
+/* קונטיינר ראשי לקומפוננטה (האלמנט המארח) */
+:host {
+    display: flex;
+    flex-direction: column; /* סידור האלמנטים אחד מתחת לשני */
+    align-items: center; /* מרכוז אופקי של האלמנטים */
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #f0f4f8; /* רקע בהיר ועדין לכל הדף */
+    min-height: 100vh; /* מתיחה לגובה המסך המינימלי */
+    direction: rtl; /* יישור מימין לשמאל */
+}
+
+/* סידור הקומפוננטות (אפליקציות הבת) */
+app-post-list,
+app-category-list {
+    width: 100%;
+    max-width: 800px; /* רוחב מקסימלי נוח לקריאה */
+    margin-bottom: 20px; /* מרווח בין הקומפוננטות */
+    /* הערה: העיצוב הפנימי של קומפוננטות אלו יקבע ע"י קבצי ה-CSS שלהן */
+}
+
+/* כפתור "Add New Post" */
+button {
+    background-color: #007bff; /* כחול שמרני ובולט */
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 20px; /* מרווח מעל הכפתור */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* צל עדין */
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+/* אפקט ריחוף (hover) על הכפתור */
+button:hover {
+    background-color: #0056b3; /* כחול כהה יותר בריחוף */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* אפקט לחיצה על הכפתור */
+button:active {
+    transform: scale(0.98); /* אפקט לחיצה קל */
+}

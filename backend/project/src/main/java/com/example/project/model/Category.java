@@ -24,24 +24,24 @@ public class Category {
 
     }
 
-    public int getCategoryId() {
+    public int getId() {
         return Id;
     }
 
-    public String getCategoryName() {
+    public void setId(int id) {
+        Id = id;
+    }
+
+    public String getName() {
         return Name;
+    }
+
+    public void setName(String name) {
+        Name = name;
     }
 
     public List<Post> getPosts() {
         return posts;
-    }
-
-    public void setCategoryId(int categoryId) {
-        this.Id = categoryId;
-    }
-
-    public void setCategoryName(String categoryName) {
-        this.Name = categoryName;
     }
 
     public void setPosts(List<Post> posts) {

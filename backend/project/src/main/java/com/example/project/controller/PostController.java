@@ -59,9 +59,11 @@ public class PostController {
 }
 
     @GetMapping("/getPosts")
-    public ResponseEntity <List<Post>> getPosts(){
+    public ResponseEntity <List<PostDTO>> getPosts(){
         try{
-            return new ResponseEntity<>(postRepository.findAll(), HttpStatus.OK);
+            List<Post> p=postRepository.findAll();
+            List<PostDTO> p1=postMapper.postsToDTO(p);
+            return new ResponseEntity<>(p1, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -72,24 +74,22 @@ public class PostController {
         try{
 
             PhotoUtils.uploadImage(photo);
-            p.setPhotoPath((photo.getOriginalFilename()));
+            AudioUtils.uploadAudio(audio);
 
-            String audioFolder = "uploads/audio/";
-            Path audioPath = Path.of(audioFolder + audio.getOriginalFilename());
-            Files.createDirectories(audioPath.getParent());
-            Files.write(audioPath, audio.getBytes());
-            p.setAudioPath(audioPath.toString());
+            p.setPhotoPath((photo.getOriginalFilename()));
+            p.setAudioPath(audio.getOriginalFilename());
 
             Post post=postRepository.save(p);
             return new ResponseEntity<>(post, HttpStatus.CREATED);
 
         } catch (Exception e) {
+            System.out.println(e);
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 }
 
     @GetMapping("/audio/{audioPath}")
-    public ResponseEntity<Resource> getReport(@PathVariable String audioPath) throws IOException {
+    public ResponseEntity<Resource> getAudio(@PathVariable String audioPath) throws IOException {
         InputStreamResource resource= AudioUtils.getAudio(audioPath);
 
         return ResponseEntity.ok()
@@ -97,6 +97,4 @@ public class PostController {
                 .contentType(MediaType.parseMediaType("audio/mpeg"))
                 .body(resource);
     }
-
-
 }

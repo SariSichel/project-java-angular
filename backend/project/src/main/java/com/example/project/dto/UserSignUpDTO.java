@@ -2,11 +2,20 @@ package com.example.project.dto;
 
 public class UserSignUpDTO {
 
+    private int Id;
     private String name;
     private String mail;
     private String password;
     private String photo;
     private String photoPath;
+
+    public int getId() {
+        return Id;
+    }
+
+    public void setId(int id) {
+        Id = id;
+    }
 
     public String getName() {
         return name;

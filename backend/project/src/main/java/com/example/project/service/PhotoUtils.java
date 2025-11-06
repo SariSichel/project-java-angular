@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 import java.util.Base64;
 
 public class PhotoUtils {
-    private static String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "\\Photos\\";
+    private static String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "\\photos\\";
 
     public static void uploadImage(MultipartFile file) throws IOException {
         //לשמור את התמונה במחשב השרת

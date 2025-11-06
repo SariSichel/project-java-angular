@@ -8,7 +8,7 @@ public class PostDTO {
     private String Name;
     private String description;
     private String lyrics;
-    private String audio;
+    //private String audio;
     private String audioPath;
     private LocalDate uploadDate;
     private LocalDate updateDate;

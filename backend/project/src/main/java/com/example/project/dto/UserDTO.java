@@ -1,6 +1,7 @@
 package com.example.project.dto;
 
 public class UserDTO {
+
     private int Id;
     private String Name;
     private String mail;

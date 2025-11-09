@@ -1,13 +1,15 @@
 package com.example.project.model;
 import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Users {
     @Id
-    @GeneratedValue
-    private int Id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long Id;
     private String Name;
     private String mail;
     private String password;
@@ -22,9 +24,10 @@ public class Users {
     @OneToMany(mappedBy = "user")
     private List<PlayList> playlists;
 
+    @ManyToMany
+    private Set<Role> roles=new HashSet<>();
 
-
-    public Users(int userId, String userName, String mail, String password, List<Post> uploadPosts, List<Comment> comments, List<PlayList> playlists, List<Post> postsTookPart, String photo) {
+    public Users(Long userId, String userName, String mail, String password, List<Post> uploadPosts, List<Comment> comments, List<PlayList> playlists, List<Post> postsTookPart, String photo) {
         this.Id = userId;
         this.Name = userName;
         this.mail = mail;
@@ -39,11 +42,11 @@ public class Users {
 
     }
 
-    public int getId() {
+    public Long getId() {
         return Id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         Id = id;
     }
 
@@ -54,7 +57,6 @@ public class Users {
     public void setName(String name) {
         Name = name;
     }
-
 
     public String getMail() {
         return mail;
@@ -72,12 +74,16 @@ public class Users {
         this.password = password;
     }
 
-    public List<Post> getUploadPosts() {
-        return uploadPosts;
-    }
-
     public String getPhotoPath() {
         return photoPath;
+    }
+
+    public void setPhotoPath(String photoPath) {
+        this.photoPath = photoPath;
+    }
+
+    public List<Post> getUploadPosts() {
+        return uploadPosts;
     }
 
     public void setUploadPosts(List<Post> uploadPosts) {
@@ -100,8 +106,11 @@ public class Users {
         this.playlists = playlists;
     }
 
+    public Set<Role> getRoles() {
+        return roles;
+    }
 
-    public void setPhotoPath(String photo) {
-        this.photoPath = photo;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }

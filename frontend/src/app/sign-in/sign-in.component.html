@@ -1,0 +1,60 @@
+<div class="container">
+
+<form #AddForm="ngForm">
+
+    <div class="form-fields">
+        <label>name:</label>
+        <input type="text" [(ngModel)]="newUser.name" name="Nname" 
+        required minlength="2" #NameId="ngModel">
+        @if(NameId.errors){
+        @if(NameId.errors['required']){
+        <span>you must write name</span>
+        }
+        @if(NameId.errors['minlength']){
+        <span>you must write at least 2 chars</span> }
+        }
+    </div>
+
+    <br><br>
+
+    <div class="form-fields">
+        <label>password:</label>
+        <input type="text" [(ngModel)]="newUser.password" name="Npassword" 
+        required minlength="8" #PasswordId="ngModel">
+        @if(PasswordId.errors){
+        @if(PasswordId.errors['required']){
+        <span>you must write name</span>
+        }
+        @if(PasswordId.errors['minlength']){
+        <span>you must write at least 8 chars</span> }
+        }
+    </div>
+
+    <br><br>
+
+     <div class="form-fields">
+        <label>email:</label>
+        <input type="email" [(ngModel)]="newUser.email" name="Nemail" 
+        required  #EmailId="ngModel" pattern="\w+@\w+\.(org|il|com)$">
+        @if(EmailId.errors){
+        @if(EmailId.errors['required']){
+        <span>you must write email</span>
+        }
+        @if(EmailId.errors['pattern']){
+        <span>invalid email</span>
+        }
+        }
+    </div>
+
+
+    <button (click)="signIn()" [disabled]="AddForm.invalid">sign in</button>
+
+    @if(notFound){
+        <h2>one or more of details is invalid  or the user isnt exist</h2>
+    }
+
+</form>
+
+  </div>
+
+

@@ -1,6 +1,9 @@
 package com.example.project.model;
 import jakarta.persistence.*;
-
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -9,7 +12,7 @@ import java.util.Set;
 public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
     private String name;
     private String mail;
     private String password;
@@ -28,7 +31,7 @@ public class Users {
     private Set<Role> roles=new HashSet<>();
 
     public Users(Long userId, String userName, String mail, String password, List<Post> uploadPosts, List<Comment> comments, List<PlayList> playlists, List<Post> postsTookPart, String photo) {
-        this.Id = userId;
+        this.id = userId;
         this.name = userName;
         this.mail = mail;
         this.password = password;
@@ -43,11 +46,11 @@ public class Users {
     }
 
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Long id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getName() {

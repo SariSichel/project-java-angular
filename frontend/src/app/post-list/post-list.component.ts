@@ -26,16 +26,21 @@ constructor(private _postService: PostsService){}
     })
   }
 
-    getPost(index: number): string {
-    return this.postsList[index].name + ": " 
-    + this.postsList[index].description+", "
-    + this.postsList[index].lyrics
-    + this.postsList[index].audio+", "
-    + this.postsList[index].uploadDate+", "
-    + this.postsList[index].updateDate+", "
-    + this.postsList[index].photoPath+", "
-    + this.postsList[index].user+", "
-    + this.postsList[index].category + ", " 
+  //   getPost(index: number): string {
+  //   return this.postsList[index].name + ": " 
+  //   + this.postsList[index].description+", "
+  //   + this.postsList[index].lyrics
+  //   + this.postsList[index].audio+", "
+  //   + this.postsList[index].uploadDate+", "
+  //   + this.postsList[index].updateDate+", "
+  //   + this.postsList[index].photoPath+", "
+  //   + this.postsList[index].user+", "
+  //   + this.postsList[index].category + ", " 
+  // }
+
+    //לעבור לעמוד של פוסט מסויים עםן מזהה
+  seeFullPost(){
+
   }
 
 }

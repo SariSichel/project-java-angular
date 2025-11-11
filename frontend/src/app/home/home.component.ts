@@ -15,4 +15,14 @@ export class HomeComponent {
   addPost(){
     this.router.navigate(["add-post"]);
   }
-}
+  signIn(){
+    this.router.navigate(["sign-in"])
+  }
+  signOut(){
+    //להתחבר לסיין אוט של השרת
+
+  }
+  signUp(){
+    this.router.navigate(["sign-up"])
+
+  }}

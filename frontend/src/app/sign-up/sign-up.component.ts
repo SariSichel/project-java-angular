@@ -46,7 +46,7 @@ constructor(private _userService:UserService){}
                         password:this.newUserSignUp.password})], { type: 'application/json' }));
     
     // שליחה לשרת
-  this._userService.signUp(this.newUserSignUp, this.selectedPhoto).subscribe({
+  this._userService.signUp(formData).subscribe({
       next: (res) => {
         alert("User signed up successfully!");
         console.log(res);

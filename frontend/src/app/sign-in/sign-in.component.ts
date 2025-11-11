@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import UserSignIn from '../model/userSignIn.model';
+import { UserService } from '../services/user.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sign-in',
@@ -9,6 +11,7 @@ import UserSignIn from '../model/userSignIn.model';
   styleUrl: './sign-in.component.css'
 })
 export class SignInComponent {
+  constructor(private _userService:UserService, private router:Router){}
 
     public newUser:UserSignIn={
     name:"user name",
@@ -18,19 +21,19 @@ export class SignInComponent {
   public notFound:boolean=false;
 
   //פונקציה מועתקת יש להתאים אותה
-  //   signIn()
-  //   {
-  //   this._userService.logIn(this.newUser).subscribe({
-  //     next: (res) => {
-  //     localStorage.setItem("currentUser", JSON.stringify(res))
-  //       console.log(res)
-  //       this.router.navigate(['home'])
-  //     },
-  //     error: (err) => {
-  //       this.notFound=true;
-  //       console.log(err)
-  //     }
-  //   })
-  // }
+    signIn()
+    {
+    this._userService.signIn(this.newUser).subscribe({
+      next: (res) => {
+      localStorage.setItem("currentUser", JSON.stringify(res))
+        console.log(res)
+        this.router.navigate(['home'])
+      },
+      error: (err) => {
+        this.notFound=true;
+        console.log(err)
+      }
+    })
+  }
 
 }

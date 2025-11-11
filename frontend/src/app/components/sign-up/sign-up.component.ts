@@ -3,7 +3,6 @@ import { FormsModule } from '@angular/forms';
 import User from '../../model/userSignUp.model';
 import UserSignUp from '../../model/userSignUp.model';
 import { UserService } from '../../services/user.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sign-up',
@@ -16,7 +15,7 @@ export class SignUpComponent {
     public selectedPhoto: File | null = null;
 
 //יש לעשות בנאים 
-  constructor(private _userService:UserService, private router:Router){}
+constructor(private _userService:UserService){}
 
 
     public newUserSignUp: UserSignUp={
@@ -47,13 +46,15 @@ export class SignUpComponent {
                         password:this.newUserSignUp.password})], { type: 'application/json' }));
     
     // שליחה לשרת
-    this._userService.signUp(formData).subscribe({
+  this._userService.signUp(formData).subscribe({
       next: (res) => {
+        alert("User signed up successfully!");
+        console.log(res);
       },
       error: (err) => {
-
+        console.error(err);
+        alert("Failed to sign up");
       }
-    });
-  }
+    });}
 
 }

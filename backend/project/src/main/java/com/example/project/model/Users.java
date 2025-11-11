@@ -10,7 +10,7 @@ public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
-    private String Name;
+    private String name;
     private String mail;
     private String password;
     private String photoPath;
@@ -29,7 +29,7 @@ public class Users {
 
     public Users(Long userId, String userName, String mail, String password, List<Post> uploadPosts, List<Comment> comments, List<PlayList> playlists, List<Post> postsTookPart, String photo) {
         this.Id = userId;
-        this.Name = userName;
+        this.name = userName;
         this.mail = mail;
         this.password = password;
         this.uploadPosts = uploadPosts;
@@ -51,11 +51,11 @@ public class Users {
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
     public String getMail() {

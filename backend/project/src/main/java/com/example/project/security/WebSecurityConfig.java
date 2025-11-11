@@ -2,8 +2,8 @@ package com.example.project.security;
 
 import com.example.project.security.jwt.AuthEntryPointJwt;
 import com.example.project.security.jwt.AuthTokenFilter;
-import org.mapstruct.Qualifier;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,11 +27,12 @@ public class WebSecurityConfig {
     @Qualifier("customUserDetailsService")
     CustomUserDetailsService userDetailsService;
 
-    @Autowired
+
     private AuthEntryPointJwt unauthorizedHandler;
 
-    public WebSecurityConfig(CustomUserDetailsService userDetailsService) {
+    public WebSecurityConfig(CustomUserDetailsService userDetailsService, AuthEntryPointJwt unauthorizedHandler) {
         this.userDetailsService = userDetailsService;
+        this.unauthorizedHandler = unauthorizedHandler;
     }
 
     @Bean
@@ -74,7 +75,7 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                                 auth.requestMatchers("/h2-console/**").permitAll()
-                                .requestMatchers("/api/user/sign**").permitAll()
+                                .requestMatchers("/api/**").permitAll()
                    //פה מאפשרים דברים בלי הרשאות או הרשאות ספציפיות
                                         .requestMatchers("/error").permitAll()
 //                  .requestMatchers("/api/user/signIn").permitAll()

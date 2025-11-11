@@ -1,5 +1,5 @@
 export default class User{
-    id!:Number
+    id?:Number
     name!:string
     mail!:string
     photoPath!: string

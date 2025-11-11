@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import User from '../model/userSignUp.model';
 import UserSignUp from '../model/userSignUp.model';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-sign-up',
@@ -14,10 +15,10 @@ export class SignUpComponent {
     public selectedPhoto: File | null = null;
 
 //יש לעשות בנאים 
+constructor(private _userService:UserService){}
 
 
     public newUserSignUp: UserSignUp={
-      id:-1,
       name:"",
       photoPath:"",
       mail:"",
@@ -29,30 +30,31 @@ export class SignUpComponent {
     this.selectedPhoto = file;
     }
 
-  // signUp() {
-  //  if (!this.selectedPhoto) {
-  //     alert("Please select photo");
-  //     return;
-  //   }
-  //   const formData = new FormData();
+  signUp() {
+   if (!this.selectedPhoto) {
+      alert("Please select photo");
+      return;
+    }
+    const formData = new FormData();
 
-  //   formData.append("photo", this.selectedPhoto);
+    formData.append("photo", this.selectedPhoto);
 
-  //   formData.append("userSignUp", new Blob
-  //     ([JSON.stringify({name:this.newUserSignUp.name,
-  //                       mail:this.newUserSignUp.mail,
-  //                       photoPath:this.newUserSignUp.photoPath,
-  //                       password:this.newUserSignUp.password})], { type: 'application/json' }));
+    formData.append("userSignUp", new Blob
+      ([JSON.stringify({name:this.newUserSignUp.name,
+                        mail:this.newUserSignUp.mail,
+                        photoPath:this.newUserSignUp.photoPath,
+                        password:this.newUserSignUp.password})], { type: 'application/json' }));
     
-  //   // // שליחה לשרת
-  //   // this._postService.addPostToServer(formData).subscribe({
-  //   //   next: (res) => {
-  //   //     alert("Post uploaded successfully!");
-  //   //   },
-  //   //   error: (err) => {
-  //   //     console.error(err);
-  //   //     alert("Failed to upload post");
-  //   //   }
-  //   // });}
+    // שליחה לשרת
+  this._userService.signUp(this.newUserSignUp, this.selectedPhoto).subscribe({
+      next: (res) => {
+        alert("User signed up successfully!");
+        console.log(res);
+      },
+      error: (err) => {
+        console.error(err);
+        alert("Failed to sign up");
+      }
+    });}
 
 }

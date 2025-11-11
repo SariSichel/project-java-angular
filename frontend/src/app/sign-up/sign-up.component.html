@@ -1,7 +1,7 @@
 <div class="container">
     <form #SignUpForm="ngForm">
         <label>user name:</label>
-        <input type="text" [(ngModel)]="newUser.name" name="name" minlength="2" maxlength="30" required #nameId="ngModel">
+        <input type="text" [(ngModel)]="newUserSignUp.name" name="name" minlength="2" maxlength="30" required #nameId="ngModel">
         @if(nameId.errors){
             @if(nameId.errors['minlength']){
                 <span>your user name is too short</span>
@@ -17,7 +17,7 @@
         <br><br>
 
         <label>email:</label>
-        <input type="email" [(ngModel)]="newUser.email" name="email" required #emailId="ngModel">
+        <input type="email" [(ngModel)]="newUserSignUp.mail" name="email" required #emailId="ngModel">
         @if(emailId.errors){
             @if(emailId.errors['required']){
                 <span>you have to enter the email</span>
@@ -30,7 +30,7 @@
         <br><br>
 
         <label>password:</label>
-        <input type="password" [(ngModel)]="newUser.password" name="password" minlength="6" maxlength="20" required #passwordId="ngModel">
+        <input type="password" [(ngModel)]="newUserSignUp.password" name="password" minlength="6" maxlength="20" required #passwordId="ngModel">
         @if(passwordId.errors){
             @if(passwordId.errors['minlength']){
                 <span>your password is too short</span>

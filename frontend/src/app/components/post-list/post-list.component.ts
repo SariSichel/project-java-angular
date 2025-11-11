@@ -38,8 +38,7 @@ constructor(private _postService: PostsService){}
   //   + this.postsList[index].category + ", " 
   // }
 
-
-  //לעבור לעמוד של פוסט מסויים עםן מזהה
+    //לעבור לעמוד של פוסט מסויים עםן מזהה
   seeFullPost(){
 
   }

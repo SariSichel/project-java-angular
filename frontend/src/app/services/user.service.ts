@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import User from '../model/userSignUp.model';
 import { Observable } from 'rxjs';
+import UserSignIn from '../model/userSignIn.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,20 +14,20 @@ export class UserService {
   constructor(private _httpClient: HttpClient){}
 
   // Sign up with FormData (user + photo)
-  signUp(user: User, photo: File): Observable<User> {
-    const formData = new FormData();
-    formData.append('photo', photo);
-    formData.append('userSignUp', new Blob([JSON.stringify(user)], { type: 'application/json' }));
+  signUp(formData: FormData): Observable<User> {
+    // const formData = new FormData();
+    // formData.append('photo', photo);
+    // formData.append('userSignUp', new Blob([JSON.stringify(user)], { type: 'application/json' }));
 
-    return this._httpClient.post<User>(`${this.baseUrl}/signUp`, formData);
+    return this._httpClient.post<User>(`http://localhost:8080/api/User/signUp`, formData);
   }
 
   // Sign in with username + password
-  signIn(user: { name: string, password: string }): Observable<string> {
-    return this._httpClient.post<string>(`${this.baseUrl}/signin`, user, { withCredentials: true });
+  signIn(userSignIn: UserSignIn): Observable<string> {
+    return this._httpClient.post<string>(`http://localhost:8080/api/User/signin`, userSignIn);
   }
-
-  signOut(): Observable<string> {
-    return this._httpClient.post<string>(`${this.baseUrl}/signout`, {}, { withCredentials: true });
+  
+  signOut(): Observable<ArrayBuffer> {
+    return this._httpClient.post<ArrayBuffer>(`http://localhost:8080/api/User/signout`,null)
   }
 }

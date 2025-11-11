@@ -32,19 +32,7 @@
 
     <br><br>
 
-     <div class="form-fields">
-        <label>email:</label>
-        <input type="email" [(ngModel)]="newUser.email" name="Nemail" 
-        required  #EmailId="ngModel" pattern="\w+@\w+\.(org|il|com)$">
-        @if(EmailId.errors){
-        @if(EmailId.errors['required']){
-        <span>you must write email</span>
-        }
-        @if(EmailId.errors['pattern']){
-        <span>invalid email</span>
-        }
-        }
-    </div>
+
 
 
     <button (click)="signIn()" [disabled]="AddForm.invalid">sign in</button>

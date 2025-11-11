@@ -11,7 +11,6 @@ import { Router } from '@angular/router';
   styleUrl: './sign-in.component.css'
 })
 export class SignInComponent {
-
   constructor(private _userService:UserService, private router:Router){}
 
     public newUser:UserSignIn={
@@ -26,11 +25,13 @@ export class SignInComponent {
     {
     this._userService.signIn(this.newUser).subscribe({
       next: (res) => {
+      localStorage.setItem("currentUser", JSON.stringify(res))
+        console.log(res)
         this.router.navigate(['home'])
       },
       error: (err) => {
-        //לבדוק מה המשמעות של זה
         this.notFound=true;
+        console.log(err)
       }
     })
   }

@@ -9,7 +9,7 @@ import UserSignIn from '../model/userSignIn.model';
 })
 export class UserService {
 
-  private baseUrl = 'http://localhost:8080/api/User';
+  // private baseUrl = 'http://localhost:8080/api/User';
 
   constructor(private _httpClient: HttpClient){}
 
@@ -19,15 +19,15 @@ export class UserService {
     // formData.append('photo', photo);
     // formData.append('userSignUp', new Blob([JSON.stringify(user)], { type: 'application/json' }));
 
-    return this._httpClient.post<User>(`http://localhost:8080/api/User/signUp`, formData);
+    return this._httpClient.post<User>(`http://localhost:8080/api/User/signUp`, formData, {withCredentials: true});
   }
 
   // Sign in with username + password
   signIn(userSignIn: UserSignIn): Observable<string> {
-    return this._httpClient.post<string>(`http://localhost:8080/api/User/signin`, userSignIn);
+    return this._httpClient.post<string>(`http://localhost:8080/api/User/signin`, userSignIn, {withCredentials: true});
   }
   
   signOut(): Observable<ArrayBuffer> {
-    return this._httpClient.post<ArrayBuffer>(`http://localhost:8080/api/User/signout`,null)
+    return this._httpClient.post<ArrayBuffer>(`http://localhost:8080/api/User/signout`,null, {withCredentials: true});
   }
 }

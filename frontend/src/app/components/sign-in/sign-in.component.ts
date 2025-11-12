@@ -14,8 +14,8 @@ export class SignInComponent {
   constructor(private _userService:UserService, private router:Router){}
 
     public newUser:UserSignIn={
-    name:"user name",
-    password:"user password",
+    name:"",
+    password:"",
   }
 
   public notFound:boolean=false;
@@ -25,7 +25,6 @@ export class SignInComponent {
     {
     this._userService.signIn(this.newUser).subscribe({
       next: (res) => {
-      localStorage.setItem("currentUser", JSON.stringify(res))
         console.log(res)
         this.router.navigate(['home'])
       },

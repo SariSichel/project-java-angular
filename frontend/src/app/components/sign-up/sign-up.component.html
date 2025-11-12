@@ -47,7 +47,7 @@
         <label>photo profile:</label>
         <input type="file" (change)="onFileSelected($event, 'photo')" accept="image/*">
         <br><br>
-        
+        <button (click)="goToSignIn()">do you have an account already? sign in.</button>
         <button (click)="signUp()" [disabled]="SignUpForm.invalid">Sign Up</button>
     </form>
 

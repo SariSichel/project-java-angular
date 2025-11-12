@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import User from '../../model/userSignUp.model';
 import UserSignUp from '../../model/userSignUp.model';
 import { UserService } from '../../services/user.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sign-up',
@@ -12,26 +13,26 @@ import { UserService } from '../../services/user.service';
 })
 export class SignUpComponent {
 
-    public selectedPhoto: File | null = null;
+  public selectedPhoto: File | null = null;
 
-//יש לעשות בנאים 
-constructor(private _userService:UserService){}
+  //יש לעשות בנאים 
+  constructor(private _userService: UserService, private router: Router) { }
 
 
-    public newUserSignUp: UserSignUp={
-      name:"",
-      photoPath:"",
-      mail:"",
-      password:""
-    }
+  public newUserSignUp: UserSignUp = {
+    name: "",
+    photoPath: "",
+    mail: "",
+    password: ""
+  }
 
-    onFileSelected(event: any, type: 'photo') {
+  onFileSelected(event: any, type: 'photo') {
     const file = event.target.files[0];
     this.selectedPhoto = file;
-    }
+  }
 
   signUp() {
-   if (!this.selectedPhoto) {
+    if (!this.selectedPhoto) {
       alert("Please select photo");
       return;
     }
@@ -40,13 +41,15 @@ constructor(private _userService:UserService){}
     formData.append("photo", this.selectedPhoto);
 
     formData.append("userSignUp", new Blob
-      ([JSON.stringify({name:this.newUserSignUp.name,
-                        mail:this.newUserSignUp.mail,
-                        photoPath:this.newUserSignUp.photoPath,
-                        password:this.newUserSignUp.password})], { type: 'application/json' }));
-    
+      ([JSON.stringify({
+        name: this.newUserSignUp.name,
+        mail: this.newUserSignUp.mail,
+        photoPath: this.newUserSignUp.photoPath,
+        password: this.newUserSignUp.password
+      })], { type: 'application/json' }));
+
     // שליחה לשרת
-  this._userService.signUp(formData).subscribe({
+    this._userService.signUp(formData).subscribe({
       next: (res) => {
         alert("User signed up successfully!");
         console.log(res);
@@ -55,6 +58,9 @@ constructor(private _userService:UserService){}
         console.error(err);
         alert("Failed to sign up");
       }
-    });}
-
+    });
+  }
+  goToSignIn() {
+    this.router.navigate(['/sign-in']);
+  }
 }

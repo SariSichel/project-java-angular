@@ -1,23 +1,24 @@
 package com.example.project.dto;
 
 public class CategoryDTO {
-    private int Id;
-    private String Name;
+
+    private int id;
+    private String name;
 
     public int getId() {
-        return Id;
+        return id;
     }
 
     public void setId(int id) {
-        Id = id;
+        id = id;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        name = name;
     }
 }
 

@@ -4,4 +4,7 @@ import com.example.project.model.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
+
+    public boolean existsPostById (Long id);
+    public  void deletePostById(Long id);
 }

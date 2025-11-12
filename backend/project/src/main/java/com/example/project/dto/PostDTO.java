@@ -4,8 +4,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class PostDTO {
-    private int Id;
-    private String Name;
+
+    private int id;
+    private String name;
     private String description;
     private String lyrics;
     //private String audio;
@@ -19,21 +20,20 @@ public class PostDTO {
     private String usersTookPart;
     private List<CommentDTO> comments;
 
-
     public int getId() {
-        return Id;
+        return id;
     }
 
     public void setId(int id) {
-        Id = id;
+        id = id;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        name = name;
     }
 
     public String getDescription() {

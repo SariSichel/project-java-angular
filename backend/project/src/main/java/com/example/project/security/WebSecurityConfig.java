@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -21,7 +22,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import java.util.List;
 
 @Configuration
-@EnableWebSecurity
+@EnableMethodSecurity
 public class WebSecurityConfig {
 
     @Qualifier("customUserDetailsService")
@@ -75,8 +76,10 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                                 auth.requestMatchers("/h2-console/**").permitAll()
-                                .requestMatchers("/api/**").permitAll()
-                   //פה מאפשרים דברים בלי הרשאות או הרשאות ספציפיות
+                                .requestMatchers("/api/User/sign**").permitAll()
+                                .requestMatchers("/api/Post/getPosts").permitAll()
+                                 .requestMatchers("/api/Category/getCategories").permitAll()
+
                                         .requestMatchers("/error").permitAll()
 //                  .requestMatchers("/api/user/signIn").permitAll()
                                         .anyRequest().authenticated()

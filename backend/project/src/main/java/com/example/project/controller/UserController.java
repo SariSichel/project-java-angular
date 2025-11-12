@@ -1,6 +1,7 @@
 package com.example.project.controller;
 
 import com.example.project.dto.UserDTO;
+import com.example.project.dto.UserSignInDTO;
 import com.example.project.dto.UserSignUpDTO;
 import com.example.project.mappers.UserMapper;
 import com.example.project.mappers.UserSignUpMapper;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -51,10 +53,11 @@ public class UserController {
         this.userMapper = userMapper;
     }
 
-    @GetMapping("/getUserById/{id}")
-    public ResponseEntity<UserDTO> getUserSignUpById(@PathVariable Long id){
+    @GetMapping("/getUserById/{userId}")
+    @PreAuthorize("@postRepository.findById(#userId).orElse(null)?.poster.userId == authentication.principal.id")
+    public ResponseEntity<UserDTO> getUserSignUpById(@PathVariable Long userId){
         try{
-            Users u=userRepository.findById(id).get();
+            Users u=userRepository.findById(userId).get();
             if(u==null){
                 return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
             }
@@ -65,9 +68,10 @@ public class UserController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> signin(@RequestBody Users u){
+    public ResponseEntity<?> signin(@RequestBody UserSignInDTO u){
+
         Authentication authentication=authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(u.getName(),u.getPassword()));
+        .authenticate(new UsernamePasswordAuthenticationToken(u.getName(),u.getPassword()));
 
         //שומר את האימות
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -103,26 +107,27 @@ public class UserController {
     }
 
     @PostMapping("/signout")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> signOut(){
         ResponseCookie cookie=jwtUtils.getCleanJwtCookie();
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE,cookie.toString())
                 .body("you've been signed out!");
     }
 
-    @PostMapping("/addUser")
-    public ResponseEntity<Users> addUser(@RequestPart("photo") MultipartFile photo, @RequestPart("post") Users u){
-        try{
-            PhotoUtils.uploadImage(photo);
-            u.setPhotoPath((photo.getOriginalFilename()));
-            Users u1=userRepository.save(u);
-            return new ResponseEntity<>(u1, HttpStatus.CREATED);
-            //לסדר את האודיו
-
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-    }
+//    @PostMapping("/addUser")
+//    public ResponseEntity<Users> addUser(@RequestPart("photo") MultipartFile photo, @RequestPart("post") Users u){
+//        try{
+//            PhotoUtils.uploadImage(photo);
+//            u.setPhotoPath((photo.getOriginalFilename()));
+//            Users u1=userRepository.save(u);
+//            return new ResponseEntity<>(u1, HttpStatus.CREATED);
+//            //לסדר את האודיו
+//
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//
+//    }
 
 
 

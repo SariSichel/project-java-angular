@@ -5,6 +5,7 @@ import com.example.project.service.PlayListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("api/PlayList")
@@ -19,10 +20,11 @@ public class PlayListController {
         this.playListRepository = playListRepository;
     }
 
-    @GetMapping("/getPlayListById/{id}")
-    public ResponseEntity<PlayList> getPlayListById(@PathVariable Long id){
+    @GetMapping("/getPlayListById/{playListId}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<PlayList> getPlayListById(@PathVariable Long playListId){
         try{
-            PlayList p=playListRepository.findById(id).orElse(null);
+            PlayList p=playListRepository.findById(playListId).orElse(null);
             if(p==null){
                 return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
             }
@@ -32,7 +34,10 @@ public class PlayListController {
         }
     }
 
+    //להוסיף פונקציה שמחזירה את כל הפלייליסטים לפי יוזר ID
+
     @PostMapping("/addPlayList")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<PlayList> addPlayList(@RequestBody PlayList p) {
         try {
             PlayList c = playListRepository.save(p);

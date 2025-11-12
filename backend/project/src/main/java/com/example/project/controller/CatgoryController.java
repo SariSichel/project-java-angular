@@ -8,6 +8,7 @@ import com.example.project.service.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,10 +27,11 @@ public class CatgoryController {
         this.categoryMapper = categoryMapper;
     }
 
-    @GetMapping("/getCategoryById/{id}")
-    public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable Long id){
+    @GetMapping("/getCategoryById/{categoryId}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable Long categoryId){
         try{
-            Category c=categoryRepository.findById(id).orElse(null);
+            Category c=categoryRepository.findById(categoryId).orElse(null);
             if(c==null){
                 return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
             }
@@ -40,6 +42,7 @@ public class CatgoryController {
     }
 
     @PostMapping("/addCategory")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Category> addCategory(@RequestBody Category t) {
         try {
             Category c = categoryRepository.save(t);

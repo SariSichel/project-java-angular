@@ -2,17 +2,17 @@ package com.example.project.dto;
 
 public class UserDTO {
 
-    private int Id;
+    private int id;
     private String Name;
     private String mail;
     private String photoPath;
 
     public int getId() {
-        return Id;
+        return id;
     }
 
     public void setId(int id) {
-        Id = id;
+        id = id;
     }
 
     public String getName() {

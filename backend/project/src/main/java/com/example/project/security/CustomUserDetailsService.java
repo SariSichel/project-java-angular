@@ -34,6 +34,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         {
             grantedAuthorities.add(new SimpleGrantedAuthority(role.getName().name()));
         }
-        return new CustomUserDetails(username,user.getPassword(),grantedAuthorities);//יוצר משתמש עבור האבטחה
+        return new CustomUserDetails(user.getId(),username,user.getPassword(),grantedAuthorities);//יוצר משתמש עבור האבטחה
     }
 }

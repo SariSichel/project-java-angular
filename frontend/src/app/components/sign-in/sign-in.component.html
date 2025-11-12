@@ -20,13 +20,13 @@
     <div class="form-fields">
         <label>password:</label>
         <input type="text" [(ngModel)]="newUser.password" name="Npassword" 
-        required minlength="8" #PasswordId="ngModel">
+        required minlength="3" #PasswordId="ngModel">
         @if(PasswordId.errors){
         @if(PasswordId.errors['required']){
         <span>you must write name</span>
         }
         @if(PasswordId.errors['minlength']){
-        <span>you must write at least 8 chars</span> }
+        <span>you must write at least 3 chars</span> }
         }
     </div>
 

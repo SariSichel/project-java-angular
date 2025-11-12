@@ -22,7 +22,7 @@ export class PostsService {
 
 
     addPostToServer(formData: FormData): Observable<Post> {
-    return this._httpClient.post<Post>(`http://localhost:8080/api/Post/addPost`, formData);
+    return this._httpClient.post<Post>(`http://localhost:8080/api/Post/addPost`, formData, {withCredentials: true});
   }
 
 }

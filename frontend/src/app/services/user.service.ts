@@ -23,6 +23,7 @@ export class UserService {
   }
 
   // Sign in with username + password
+<<<<<<< HEAD
 signIn(userSignIn: UserSignIn): Observable<string> {
   return this._httpClient.post(`http://localhost:8080/api/User/signin`, userSignIn, {
     responseType: 'text',  // <-- חשוב!
@@ -30,6 +31,11 @@ signIn(userSignIn: UserSignIn): Observable<string> {
   });
 }
 
+=======
+  signIn(userSignIn: UserSignIn): Observable<string> {
+    return this._httpClient.post<string>(`http://localhost:8080/api/User/signin`, userSignIn, {withCredentials: true,responseType: 'text' as 'json'});
+  }
+>>>>>>> 7719edd86179aab01f336e753252cd51c682c543
   
   signOut(): Observable<ArrayBuffer> {
     return this._httpClient.post<ArrayBuffer>(`http://localhost:8080/api/User/signout`,null, {withCredentials: true});

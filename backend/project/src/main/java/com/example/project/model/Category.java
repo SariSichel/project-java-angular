@@ -8,15 +8,15 @@ import java.util.List;
 public class Category {
     @Id
     @GeneratedValue
-    private int Id;
-    private String Name;
+    private int id;
+    private String name;
 
     @OneToMany(mappedBy = "category")
     private List<Post> posts;
 
     public Category(int categoryId, String categoryName, List<Post> posts) {
-        this.Id = categoryId;
-        this.Name = categoryName;
+        this.id = categoryId;
+        this.name = categoryName;
         this.posts = posts;
     }
 
@@ -25,19 +25,19 @@ public class Category {
     }
 
     public int getId() {
-        return Id;
+        return id;
     }
 
     public void setId(int id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
     public List<Post> getPosts() {

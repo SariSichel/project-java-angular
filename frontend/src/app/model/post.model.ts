@@ -3,6 +3,7 @@ import User from "./user.model"
 import Comment from "./comment.model"
 
 export default class Post{
+    
     id !:Number
     name !: string
     description ?:string

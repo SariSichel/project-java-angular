@@ -10,7 +10,7 @@ public class CategoryDTO {
     }
 
     public void setId(int id) {
-        id = id;
+        this.id = id;
     }
 
     public String getName() {
@@ -18,7 +18,7 @@ public class CategoryDTO {
     }
 
     public void setName(String name) {
-        name = name;
+        this.name = name;
     }
 }
 

@@ -9,8 +9,8 @@ import java.util.List;
 public class Post {
     @Id
     @GeneratedValue
-    private int Id;
-    private String Name;
+    private Long id;
+    private String name;
     private String description;
     private String lyrics;
     private String audioPath;
@@ -30,9 +30,9 @@ public class Post {
    private List<Comment> comments;
 
 
-    public Post(int Id, String Name, String description, String lyrics, LocalDate uploadDate, LocalDate updateDate, Users user, Category category, String usersTookPart, List<Comment> comments, PlayList playList, String audioPath, String photoPath) {
-        this.Id = Id;
-        this.Name = Name;
+    public Post(Long Id, String Name, String description, String lyrics, LocalDate uploadDate, LocalDate updateDate, Users user, Category category, String usersTookPart, List<Comment> comments, PlayList playList, String audioPath, String photoPath) {
+        this.id = Id;
+        this.name = Name;
         this.description = description;
         this.lyrics = lyrics;
         this.uploadDate = uploadDate;
@@ -48,16 +48,20 @@ public class Post {
     public Post() {
     }
 
-    public int getId() {
-        return Id;
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
     public String getDescription() {
@@ -116,9 +120,6 @@ public class Post {
         this.audioPath = audioPath;
     }
 
-    public void setId(int id) {
-        Id = id;
-    }
 
     public String getUsersTookPart() {
         return usersTookPart;

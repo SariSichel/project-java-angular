@@ -1,43 +1,110 @@
+// import { Injectable } from '@angular/core';
+// import { HttpClient } from '@angular/common/http';
+// import User from '../model/userSignUp.model';
+// import { Observable } from 'rxjs';
+// import UserSignIn from '../model/userSignIn.model';
+
+// @Injectable({
+//   providedIn: 'root'
+// })
+// export class UserService {
+
+//   // private baseUrl = 'http://localhost:8080/api/User';
+//   // private baseUrl = 'http://localhost:8080/api/auth';
+
+
+//   constructor(private _httpClient: HttpClient){}
+
+//   // Sign up with FormData (user + photo)
+//   signUp(formData: FormData): Observable<User> {
+//     // const formData = new FormData();
+//     // formData.append('photo', photo);
+//     // formData.append('userSignUp', new Blob([JSON.stringify(user)], { type: 'application/json' }));
+
+//     return this._httpClient.post<User>(`http://localhost:8080/api/User/signUp`, formData, {withCredentials: true});
+//   }
+
+//   // Sign in with username + password
+// signIn(userSignIn: UserSignIn): Observable<any> {
+//   return this._httpClient.post(`http://localhost:8080/api/User/signin`, userSignIn, {
+//     responseType: 'text',  
+//     withCredentials: true
+//   });
+// }
+  
+//   signOut(): Observable<string> {
+//     return this._httpClient.post(`http://localhost:8080/api/User/signout`,null, {
+//     responseType: 'text',  
+//     withCredentials: true
+//   });
+//   }
+
+//   //   // פונקציה שבודקת אם המשתמש מחובר
+//   // isLoggedIn(): Observable<boolean> {
+//   //   return this._httpClient.get<boolean>(`${this.baseUrl}/status`, { withCredentials: true });
+//   // }
+
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import User from '../model/userSignUp.model';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import UserSignIn from '../model/userSignIn.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root'
 })
 export class UserService {
 
-  // private baseUrl = 'http://localhost:8080/api/User';
+  private apiUrl = 'http://localhost:8080/api/User'; 
 
-  constructor(private _httpClient: HttpClient){}
+  // 🟢 BehaviorSubject לניהול המצב
+  private _isLoggedIn = new BehaviorSubject<boolean>(false);
+  // 🟢 Observable שאליו הקומפוננטות יירשמו
+  public isLoggedIn$ = this._isLoggedIn.asObservable();
 
-  // Sign up with FormData (user + photo)
-  signUp(formData: FormData): Observable<User> {
-    // const formData = new FormData();
-    // formData.append('photo', photo);
-    // formData.append('userSignUp', new Blob([JSON.stringify(user)], { type: 'application/json' }));
+  constructor(private _httpClient: HttpClient){
+    // בדיקה ראשונית של המצב כשנטען השירות
+    this.checkLoginStatus();
+  }
 
-    return this._httpClient.post<User>(`http://localhost:8080/api/User/signUp`, formData, {withCredentials: true});
-  }
+  // פונקציה לעדכון מצב ההתחברות גלובלית
+  setLoggedIn(status: boolean): void {
+    this._isLoggedIn.next(status);
+  }
 
-  // Sign in with username + password
-<<<<<<< HEAD
-signIn(userSignIn: UserSignIn): Observable<string> {
-  return this._httpClient.post(`http://localhost:8080/api/User/signin`, userSignIn, {
-    responseType: 'text',  // <-- חשוב!
-    withCredentials: true
-  });
-}
-
-=======
-  signIn(userSignIn: UserSignIn): Observable<string> {
-    return this._httpClient.post<string>(`http://localhost:8080/api/User/signin`, userSignIn, {withCredentials: true,responseType: 'text' as 'json'});
-  }
->>>>>>> 7719edd86179aab01f336e753252cd51c682c543
+  // 🟢 פונקציה לבדיקת סטטוס מול השרת (כמו בגרסה הראשונה שצירפת)
+  private checkLoginStatus(): void {
+    this._httpClient.get<boolean>(`${this.apiUrl}/status`, { withCredentials: true }).subscribe({
+      next: (status) => this.setLoggedIn(status),
+      error: () => this.setLoggedIn(false) // אם יש שגיאה, מניחים שלא מחובר
+    });
+  }
   
-  signOut(): Observable<ArrayBuffer> {
-    return this._httpClient.post<ArrayBuffer>(`http://localhost:8080/api/User/signout`,null, {withCredentials: true});
-  }
+  signUp(formData: FormData): Observable<User> {
+    // לאחר הרשמה מוצלחת וקבלת עוגייה, נעדכן את הסטטוס
+    return this._httpClient.post<User>(`${this.apiUrl}/signUp`, formData, {withCredentials: true}).pipe(
+      tap(() => this.setLoggedIn(true)) 
+    );
+  }
+
+  signIn(userSignIn: UserSignIn): Observable<any> {
+    // לאחר כניסה מוצלחת וקבלת עוגייה, נעדכן את הסטטוס
+    return this._httpClient.post(`${this.apiUrl}/signin`, userSignIn, {
+      responseType: 'text',  
+      withCredentials: true
+    }).pipe(
+      tap(() => this.setLoggedIn(true)) // 👈 עדכון מצב
+    );
+  }
+  
+  signOut(): Observable<string> {
+    // לאחר יציאה מוצלחת, נעדכן את הסטטוס
+    return this._httpClient.post(`${this.apiUrl}/signout`, null, {
+      responseType: 'text',  
+      withCredentials: true
+    }).pipe(
+      tap(() => this.setLoggedIn(false)) // 👈 עדכון מצב
+    );
+  }
 }

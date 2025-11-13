@@ -36,7 +36,7 @@ export class AddPostComponent {
     name:"",
     description:"",
     lyrics:"",
-    audio:"",
+    audioPath:"",
     uploadDate:new Date(),
     photoPath:"",
     //צריך לתפוס יוזר מהלוקאל סטוראג
@@ -73,7 +73,8 @@ export class AddPostComponent {
                                                       ,user:this.newPost.user
                                                     ,category:this.newPost.category
                                                     ,usersTookPart:this.newPost.usersTookPart
-                                                    ,comments:this.newPost.comments})], { type: 'application/json' }));
+                                                    ,comments:this.newPost.comments})]));
+                                                    //, { type: 'application/json' }
 
     // שליחה לשרת
     this._postService.addPostToServer(formData).subscribe({

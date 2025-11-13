@@ -25,4 +25,8 @@ export class PostsService {
     return this._httpClient.post<Post>(`http://localhost:8080/api/Post/addPost`, formData, {withCredentials: true});
   }
 
+  getPostByIdFromServer(postId:number):Observable<Post>{
+    return this._httpClient.get<Post>(`http://localhost:8080/api/Post/getPostById/${postId}`)
+  }
+
 }

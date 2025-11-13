@@ -1,1 +1,38 @@
+<div>
 
+    @if(post){
+        <label>photo:</label>
+        <img [src]="'data:image/jpeg;base64,' + post.photoPath" width="300" style="height:auto;" />
+        <label>name:</label>
+        <span>{{post.name}}</span>
+        <br><br>
+        <label>description:</label>
+        <span>{{post.description}}</span>
+        <br><br>
+        <label>lyrics:</label>
+        <h5>{{post.lyrics}}</h5>
+        <br><br>
+        <label>update date:</label>
+        <span>{{post.updateDate}}</span>
+         <label>upload date:</label>
+        <span>{{post.uploadDate}}</span>
+        <br><br>
+        <label>category:</label>
+        <span>{{post.category.name}}</span>
+        <br><br>
+        <label>users took part:</label>
+        <span>{{post.usersTookPart}}</span>
+        <br><br>
+        <label>audio:</label>
+<audio controls>
+  <source [src]="'http://localhost:8080/api/Post/audio/' + post.audioPath" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+        <label>comments:</label>
+        @for(comment of post.comments; track $index){
+          <h5>{{comment.text}}</h5>
+            <!-- stars -->
+        }
+
+    }
+</div>

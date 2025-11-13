@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { PostsService } from '../../services/posts.service';
 import Post from '../../model/post.model';
 import Comment from '../../model/comment.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-post-list',
@@ -13,7 +14,7 @@ export class PostListComponent {
 
   public postsList!:Post[]
 
-constructor(private _postService: PostsService){}
+constructor(private _postService: PostsService, private router:Router){}
 
   ngOnInit(): void{
     this._postService.getPostsFromServer().subscribe({
@@ -39,8 +40,8 @@ constructor(private _postService: PostsService){}
   // }
 
     //לעבור לעמוד של פוסט מסויים עם מזהה
-  seeFullPost(){
-
+  seeFullPost(id:Number){
+    this.router.navigate(['full-post', id]);
   }
 
 }

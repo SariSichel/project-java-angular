@@ -9,8 +9,9 @@ export default class Post{
     description ?:string
     lyrics?: string
     //איך מביאים את האודיו לכאן
+
     //צריך גם את הניתוב?
-    audio!: string
+    audioPath!: string
     uploadDate!: Date
     updateDate?:Date
     //אותן שאלות על התמונה

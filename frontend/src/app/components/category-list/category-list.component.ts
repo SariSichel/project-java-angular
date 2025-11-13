@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import Category from '../../model/category.model';
 import { CategoriesService } from '../../services/categories.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-category-list',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './category-list.component.html',
   styleUrl: './category-list.component.css'
 })
@@ -20,7 +21,7 @@ export class CategoryListComponent {
         this.categoriesList=res
       },
       error: (err)=>{
-        
+        console.error(err);
       }
     })
   }

@@ -24,7 +24,7 @@ export class UserService {
 
   // Sign in with username + password
   signIn(userSignIn: UserSignIn): Observable<string> {
-    return this._httpClient.post<string>(`http://localhost:8080/api/User/signin`, userSignIn, {withCredentials: true});
+    return this._httpClient.post<string>(`http://localhost:8080/api/User/signin`, userSignIn, {withCredentials: true,responseType: 'text' as 'json'});
   }
   
   signOut(): Observable<ArrayBuffer> {

@@ -26,11 +26,11 @@
         <br><br>
 
          <label>photo:</label>
-        <input type="file" (change)="onFileSelected($event, 'photo')" accept="image/*">
+        <input type="file" (change)="onFileSelected($event, 'photo')" accept="image/*" name="photo">
         <br><br>
 
         <label>audio:</label>
-        <input type="file" (change)="onFileSelected($event, 'audio')" accept="audio/*">
+        <input type="file" (change)="onFileSelected($event, 'audio')" accept="audio/*" name="audio">
         <br><br>
    
         <label>category:</label>
@@ -42,7 +42,7 @@
         <br><br>
 
         <label>people took part:</label>
-        <input type="text" [(ngModel)]="newPost.usersTookPart" required="false">
+        <input type="text" [(ngModel)]="newPost.usersTookPart" required="false" name="usersTookPart">
 
     </form>
      <button (click)="addPost()">Add Post</button>

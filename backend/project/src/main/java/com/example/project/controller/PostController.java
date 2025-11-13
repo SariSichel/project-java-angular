@@ -27,7 +27,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/Post")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 public class PostController {
 
     PostRepository postRepository;
@@ -73,25 +73,56 @@ public class PostController {
         }
     }
 
-    @PostMapping("/addPost")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Post> addPost(@RequestPart("photo") MultipartFile photo, @RequestPart("post") Post p, @RequestPart("audio") MultipartFile audio) {
-        try {
+//    @PostMapping("/addPost")
+//    @PreAuthorize("hasRole('USER')")
+//    public ResponseEntity<Post> addPost(@RequestPart("photo") MultipartFile photo, @RequestPart("post") Post p, @RequestPart("audio") MultipartFile audio) {
+//        try {
+//
+//            PhotoUtils.uploadImage(photo);
+//            AudioUtils.uploadAudio(audio);
+//
+//            p.setPhotoPath((photo.getOriginalFilename()));
+//            p.setAudioPath(audio.getOriginalFilename());
+//
+//            Post post = postRepository.save(p);
+//            return new ResponseEntity<>(post, HttpStatus.CREATED);
+//
+//        } catch (Exception e) {
+//            System.out.println(e);
+//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
+@PostMapping("/addPost")
+@PreAuthorize("hasRole('USER')")
+public ResponseEntity<Post> addPost(
+        @RequestPart("photo") MultipartFile photo,
+        @RequestPart("post") Post p,
+        @RequestPart("audio") MultipartFile audio) {
 
-            PhotoUtils.uploadImage(photo);
-            AudioUtils.uploadAudio(audio);
+    try {
+        // 1. העלאת תמונה: PhotoUtils שומר את התמונה ומחזיר את הנתיב לשם שלה
+        //    (כדאי לוודא שגם PhotoUtils יוצר GUID ושומר אותו ב-p.setPhotoPath)
+        PhotoUtils.uploadImage(photo);
+        p.setPhotoPath((photo.getOriginalFilename()));
 
-            p.setPhotoPath((photo.getOriginalFilename()));
-            p.setAudioPath(audio.getOriginalFilename());
 
-            Post post = postRepository.save(p);
-            return new ResponseEntity<>(post, HttpStatus.CREATED);
+        // 2. העלאת אודיו: קריאה למתודה שמחזירה את שם הקובץ הייחודי + הסיומת
+        String uniqueAudioFileName = AudioUtils.uploadAudio(audio);
 
-        } catch (Exception e) {
-            System.out.println(e);
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        // 3. שמירת שם הקובץ הייחודי ב-DB
+        //    זה מבטיח שהשם כולל סיומת וזהו השם ש-AudioUtils.getAudio מחפש.
+        p.setAudioPath(uniqueAudioFileName);
+
+        // 4. שמירת הפוסט בבסיס הנתונים
+        Post post = postRepository.save(p);
+        return new ResponseEntity<>(post, HttpStatus.CREATED);
+
+    } catch (Exception e) {
+        // חשוב להדפיס את המחסנית המלאה של השגיאה (Stack Trace)
+        e.printStackTrace();
+        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+}
 
     @GetMapping("/audio/{audioPath}")
     @PreAuthorize("hasRole('USER')")

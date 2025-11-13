@@ -4,7 +4,7 @@
 
     <div class="form-fields">
         <label>name:</label>
-        <input type="text" [(ngModel)]="newUser.name" name="Nname" 
+        <input type="text" [(ngModel)]="newUser.name" name="name" 
         required minlength="2" #NameId="ngModel">
         @if(NameId.errors){
         @if(NameId.errors['required']){
@@ -19,7 +19,7 @@
 
     <div class="form-fields">
         <label>password:</label>
-        <input type="text" [(ngModel)]="newUser.password" name="Npassword" 
+        <input type="text" [(ngModel)]="newUser.password" name="password" 
         required minlength="3" #PasswordId="ngModel">
         @if(PasswordId.errors){
         @if(PasswordId.errors['required']){

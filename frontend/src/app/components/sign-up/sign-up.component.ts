@@ -15,7 +15,6 @@ export class SignUpComponent {
 
   public selectedPhoto: File | null = null;
 
-  //יש לעשות בנאים 
   constructor(private _userService: UserService, private router: Router) { }
 
 
@@ -53,6 +52,7 @@ export class SignUpComponent {
       next: (res) => {
         alert("User signed up successfully!");
         console.log(res);
+        this.router.navigate(['home']);
       },
       error: (err) => {
         console.error(err);

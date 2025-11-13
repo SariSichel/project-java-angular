@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { PostListComponent } from "../post-list/post-list.component";
 import { CategoryListComponent } from "../category-list/category-list.component";
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-home',
@@ -10,7 +11,7 @@ import { CategoryListComponent } from "../category-list/category-list.component"
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-  constructor(private router:Router) { }
+  constructor(private router:Router, private _userService:UserService) { }
 
   addPost(){
     this.router.navigate(["add-post"]);
@@ -19,8 +20,16 @@ export class HomeComponent {
     this.router.navigate(["sign-in"])
   }
   signOut(){
-    //להתחבר לסיין אוט של השרת
-
+    this._userService.signOut().subscribe({
+      next:(res)=>{
+        alert("Signed out successfully");
+        this.router.navigate(["sign-in"])
+      },
+      error:(err)=>{
+        console.error(err);
+        alert("Failed to sign out");
+      }
+    })      
   }
   signUp(){
     this.router.navigate(["sign-up"])

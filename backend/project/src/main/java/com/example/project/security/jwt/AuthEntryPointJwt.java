@@ -24,6 +24,7 @@ import java.util.jar.JarOutputStream;
 public class AuthEntryPointJwt implements AuthenticationEntryPoint {
 
     @Override
+
     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
         System.out.println(e);
         httpServletResponse.sendError(httpServletResponse.SC_UNAUTHORIZED);

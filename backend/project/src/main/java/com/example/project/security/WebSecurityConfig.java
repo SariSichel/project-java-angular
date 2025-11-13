@@ -2,21 +2,19 @@ package com.example.project.security;
 
 import com.example.project.security.jwt.AuthEntryPointJwt;
 import com.example.project.security.jwt.AuthTokenFilter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.List;
@@ -25,11 +23,8 @@ import java.util.List;
 @EnableMethodSecurity
 public class WebSecurityConfig {
 
-    @Qualifier("customUserDetailsService")
-    CustomUserDetailsService userDetailsService;
-
-
-    private AuthEntryPointJwt unauthorizedHandler;
+    private final CustomUserDetailsService userDetailsService;
+    private final AuthEntryPointJwt unauthorizedHandler;
 
     public WebSecurityConfig(CustomUserDetailsService userDetailsService, AuthEntryPointJwt unauthorizedHandler) {
         this.userDetailsService = userDetailsService;
@@ -44,10 +39,8 @@ public class WebSecurityConfig {
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
-
         return authProvider;
     }
 
@@ -63,32 +56,45 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        //משבית את הגנת CSRF על ידי הפעלת שיטת `csrf()` והשבתתה
-        http.csrf(csrf -> csrf.disable()).cors(cors->cors.configurationSource(request -> {
-                    CorsConfiguration corsConfiguration=new CorsConfiguration();
-                    corsConfiguration.setAllowedOrigins(List.of("http://localhost:4200"));
-                    corsConfiguration.setAllowedMethods(List.of("*"));
-                    corsConfiguration.setAllowedHeaders(List.of("*"));
-                    corsConfiguration.setAllowCredentials(true);
-                    return corsConfiguration;
+
+        http
+                // CSRF כבוי כי משתמשים ב-JWT
+                .csrf(csrf -> csrf.disable())
+
+                // CORS + cookies
+                .cors(cors -> cors.configurationSource(request -> {
+                    CorsConfiguration configuration = new CorsConfiguration();
+                    configuration.setAllowedOrigins(List.of("http://localhost:4200"));
+                    configuration.setAllowedMethods(List.of("*"));
+                    configuration.setAllowedHeaders(List.of("*"));
+                    configuration.setAllowCredentials(true); // כדי שה-cookie יישלח
+                    return configuration;
                 }))
 
+                // Stateless – אין session
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth ->
-                                auth.requestMatchers("/h2-console/**").permitAll()
-                                .requestMatchers("/api/User/sign**").permitAll()
-                                .requestMatchers("/api/Post/getPosts").permitAll()
-                                 .requestMatchers("/api/Category/getCategories").permitAll()
 
-                                        .requestMatchers("/error").permitAll()
-//                  .requestMatchers("/api/user/signIn").permitAll()
-                                        .anyRequest().authenticated()
+                // הרשאות ל-endpoints
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/h2-console/**").permitAll()
+                        .requestMatchers("/api/User/sign**").permitAll()
+                        .requestMatchers("/api/Post/getPosts").permitAll()
+                        .requestMatchers("/api/Category/getCategories").permitAll()
+                        .requestMatchers("/error").permitAll()
+                        .anyRequest().authenticated()
+                )
+
+                // טיפול ב-403/401
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(unauthorizedHandler)
                 );
 
-        // fix H2 database console: Refused to display ' in a frame because it set 'X-Frame-Options' to 'deny'
-        http.headers(headers -> headers.frameOptions(frameOption -> frameOption.sameOrigin()));
+        // H2 console
+        http.headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()));
+
+        // 🟢 **החלק החשוב – הרשמת ה-JWT Filter**
+        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
-
 }

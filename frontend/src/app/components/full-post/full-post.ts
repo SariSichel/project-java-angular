@@ -11,25 +11,47 @@ import { PostsService } from '../../services/posts.service';
 })
 export class FullPostComponent {
 
-constructor(private route: ActivatedRoute, private postService:PostsService) { }
+  constructor(private route: ActivatedRoute, private postService: PostsService) { }
   //המשתנה שיוחזר מהשרת
-public post!:Post
+  public post!: Post
+  public audioUrl: string | null = null;
 
-ngOnInit(): void {
-  var id:number;
+
+  ngOnInit(): void {
+  var id: number;
+
   this.route.params.subscribe((params) => {
     id = params['id'];
-    this.postService.getPostByIdFromServer(id).subscribe({
-      next:(res)=>{
-        this.post=res;
-      },
-      error:(err)=>{
-        
-      }
-    })
-  });
 
+    this.postService.getPostByIdFromServer(id).subscribe({
+      next: (res) => {
+        this.post = res;
+
+        this.postService.getAudio(this.post.audioPath).subscribe({
+          next: (audioBlob) => {
+                this.audioUrl = URL.createObjectURL(audioBlob);          },
+          error: (err) => {
+            // טיפול בשגיאת קבלת האודיו
+            console.error('Error fetching audio:', err); 
+          }
+        });
+      }, // <-- סוגר את בלוק next: של ה-getPostByIdFromServer
+      error: (err) => {
+        // טיפול בשגיאת קבלת הפוסט
+        console.error('Error fetching post:', err);
+      }
+    }); // <-- סוגר את subscribe של ה-getPostByIdFromServer
+  }); // <-- סוגר את subscribe של ה-route.params
+
+  // מומלץ לנקות את כתובת ה-URL המקומית כאשר הקומפוננטה נהרסת
+  // ngOnDestroy(): void {
+  //  if (this.audioUrl) {
+  //     URL.revokeObjectURL(this.audioUrl);
+  //   }
+  // }
+  
 }
+  
 //נשלח לפונקציה את הפוסט עצמו ונשלוף את השדות להראות
   //   getPost(index: number): string {
   //   return this.postsList[index].name + ": " 
@@ -43,3 +65,7 @@ ngOnInit(): void {
   //   + this.postsList[index].category + ", " 
   // }
 }
+function ngOnDestroy() {
+  throw new Error('Function not implemented.');
+}
+

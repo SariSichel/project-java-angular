@@ -25,7 +25,7 @@ public class PostDTO {
     }
 
     public void setId(int id) {
-        id = id;
+        this.id = id;
     }
 
     public String getName() {
@@ -33,7 +33,7 @@ public class PostDTO {
     }
 
     public void setName(String name) {
-        name = name;
+        this.name = name;
     }
 
     public String getDescription() {

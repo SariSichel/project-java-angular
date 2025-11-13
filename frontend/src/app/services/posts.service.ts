@@ -24,7 +24,11 @@ addPostToServer(formData: FormData): Observable<Post> {
   }
 
   getPostByIdFromServer(postId:number):Observable<Post>{
-    return this._httpClient.get<Post>(`http://localhost:8080/api/Post/getPostById/${postId}`)
+    return this._httpClient.get<Post>(`http://localhost:8080/api/Post/getPostById/${postId}`,{withCredentials: true})
+  }
+
+  getAudio(audioPath:string):Observable<Blob>{
+    return this._httpClient.get(`http://localhost:8080/api/Post/audio/${audioPath}`, { responseType: 'blob', withCredentials: true });
   }
 
 

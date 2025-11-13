@@ -96,12 +96,20 @@ public class PostController {
     @GetMapping("/audio/{audioPath}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Resource> getAudio(@PathVariable String audioPath) throws IOException {
-        InputStreamResource resource = AudioUtils.getAudio(audioPath);
+        try {
+            InputStreamResource resource = AudioUtils.getAudio(audioPath);
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + audioPath + "\"")
-                .contentType(MediaType.parseMediaType("audio/mpeg"))
-                .body(resource);
+            if (resource == null || resource.exists() == false) {
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND); // 404
+            }
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + audioPath + "\"")
+                    .contentType(MediaType.parseMediaType("audio/mpeg"))
+                    .body(resource);
+        }catch (Exception e) {
+            e.fillInStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR); // 500 לשגיאות אחרות
+        }
     }
 
     @DeleteMapping("/deletePostById/{postId}")

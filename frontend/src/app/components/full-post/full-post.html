@@ -24,10 +24,21 @@
         <span>{{post.usersTookPart}}</span>
         <br><br>
         <label>audio:</label>
-<audio controls>
+    @if(audioUrl){ 
+        <audio controls [src]="audioUrl"></audio> 
+    }
+    
+    @if(!audioUrl){
+        <span>... Audio Loading ...</span>
+    }
+        <!-- <label>audio:</label>
+    <audio controls [src]="audioUrl" crossorigin="anonymous"></audio> -->
+        <!-- <label>audio:</label>
+        <audio controls [src]="'http://localhost:8080/api/Post/audio/' + post.audioPath" crossorigin="use-credentials"></audio> -->
+<!-- <audio controls>
   <source [src]="'http://localhost:8080/api/Post/audio/' + post.audioPath" type="audio/mpeg">
   Your browser does not support the audio element.
-</audio>
+</audio> -->
         <label>comments:</label>
         @for(comment of post.comments; track $index){
           <h5>{{comment.text}}</h5>

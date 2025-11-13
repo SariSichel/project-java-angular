@@ -98,3 +98,34 @@ public class WebSecurityConfig {
         return http.build();
     }
 }
+
+
+//    //מהצאט
+//    @Bean
+//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//
+//        http
+//                .csrf(csrf -> csrf.disable())
+//                .cors(cors -> cors.configurationSource(request -> {
+//                    var config = new org.springframework.web.cors.CorsConfiguration();
+//                    config.setAllowedOrigins(List.of("http://localhost:4200"));
+//                    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+//                    config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
+//                    config.setAllowCredentials(true);
+//                    return config;
+//                }))
+//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//                .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers("/h2-console/**").permitAll()
+//                        .requestMatchers("/api/User/sign**").permitAll()
+//                        .requestMatchers("/api/Post/getPosts").permitAll()
+//                        .requestMatchers("/api/Category/getCategories").permitAll()
+//                        .anyRequest().authenticated()
+//                )
+//                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler));
+//
+//        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+//
+//        return http.build();
+//    }
+//}

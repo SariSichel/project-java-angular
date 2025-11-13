@@ -40,18 +40,17 @@ export class AddPostComponent {
     uploadDate:new Date(),
     photoPath:"",
     //צריך לתפוס יוזר מהלוקאל סטוראג
-    user:{id:1,name:"",mail:"",photoPath:""},
+    user:{id:99,name:"",mail:"",photoPath:""},
     category:this.categoriesList[0],
     usersTookPart:"",
     comments:[]
   }
 
-    onFileSelected(event: any, type: 'photo' | 'audio') {
+  onFileSelected(event: any, type: 'photo' | 'audio') {
     const file = event.target.files[0];
     if (type === 'photo') this.selectedPhoto = file;
     else this.selectedAudio = file;
   }
-
 
   addPost() {
     if (!this.selectedPhoto || !this.selectedAudio) {
@@ -88,3 +87,37 @@ export class AddPostComponent {
     });
 }
 }
+  //מהצאט
+//   addPost() {
+//   if (!this.selectedPhoto || !this.selectedAudio) {
+//     alert("Please select both photo and audio files before uploading");
+//     return;
+//   }
+
+//   const formData = new FormData();
+//   formData.append("photo", this.selectedPhoto);
+//   formData.append("audio", this.selectedAudio);
+
+//   const postPayload = {
+//     name: this.newPost.name,
+//     description: this.newPost.description,
+//     lyrics: this.newPost.lyrics,
+//     uploadDate: this.newPost.uploadDate,
+//     user: this.newPost.user,
+//     category: this.newPost.category,
+//     usersTookPart: this.newPost.usersTookPart,
+//     comments: this.newPost.comments
+//   };
+
+//   formData.append("post", new Blob([JSON.stringify(postPayload)], { type: 'application/json' }));
+
+//   this._postService.addPostToServer(formData).subscribe({
+//     next: (res) => alert("Post uploaded successfully!"),
+//     error: (err) => {
+//       console.error(err);
+//       alert("Failed to upload post");
+//     }
+//   });
+// }
+
+

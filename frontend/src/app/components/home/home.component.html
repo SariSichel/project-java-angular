@@ -1,9 +1,21 @@
-<nav>
-    <button (click)="signIn()">sign in</button>
-    <button (click)="signUp()">sign up</button>
-    <button (click)="signOut()">sign out</button>
+<!-- <nav>
+  <button (click)="signIn()">sign in</button>
+  <button (click)="signUp()">sign up</button>
+  <button (click)="signOut()">sign out</button>
 </nav>
+
 <app-post-list></app-post-list>
 <app-category-list></app-category-list>
 
-<button (click)="addPost()">Add New Post</button>
+<button (click)="addPost()" [disabled]="!hasCookie">Add New Post</button> -->
+
+<nav>
+  <button (click)="signIn()">sign in</button>
+  <button (click)="signUp()">sign up</button>
+  <button (click)="signOut()">sign out</button>
+</nav>
+
+<app-post-list></app-post-list>
+<app-category-list></app-category-list>
+
+<button (click)="addPost()" [disabled]="!(isLoggedIn$ | async)">Add New Post</button>

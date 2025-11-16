@@ -1,0 +1,34 @@
+@if(user){
+    <div>
+<form #userForm="ngForm">
+    <label>user name:</label>
+    <input type="text" [(ngModel)]="user.name" name="name" minlength="2" maxlength="50" required #usernameId="ngModel">
+    @if(usernameId.errors){
+        @if(usernameId.errors['minlength']){
+            <span>your user name is too short</span>
+        }
+        @if(usernameId.errors['maxlength']){
+            <span>your user name is too long</span>
+        }
+        @if(usernameId.errors['required']){
+            <span>you have to enter the user name</span>
+        }
+    }
+    <br><br>
+    <label>email:</label>
+    <input type="mail" [(ngModel)]="user.mail" name="mail" required #emailId="ngModel">
+    @if(emailId.errors){
+        @if(emailId.errors['required']){
+            <span>you have to enter the email</span>
+        }
+        @if(emailId.errors['email']){
+            <span>you have to enter a valid email</span>
+        }
+    }
+    <br><br>
+             <label>photo:</label>
+        <input type="file" (change)="onPhotoSelected($event, 'photo')" accept="image/*" name="photo">
+</form>
+<button (click)="updateUser()">Update User</button>
+</div>
+}

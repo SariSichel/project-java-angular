@@ -120,4 +120,12 @@ export class UserService {
       tap(() => this.setLoggedIn(false)) // 👈 עדכון מצב
     );
   }
+
+
+getUserByIdFromServer(id: Number): Observable<User> {
+
+  //לשים ניתוב לשרת
+  return this._httpClient.get<User>(`${id}`, { withCredentials: true });
+}
+
 }

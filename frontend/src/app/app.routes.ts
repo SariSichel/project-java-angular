@@ -4,6 +4,7 @@ import { HomeComponent } from './components/home/home.component';
 import { SignInComponent } from './components/sign-in/sign-in.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { FullPostComponent } from './components/full-post/full-post';
+import { PersonalAreaComponent } from './components/personal-area/personal-area.component';
 
 
 export const routes: Routes = [
@@ -13,6 +14,7 @@ export const routes: Routes = [
     {path: "sign-in", component:SignInComponent},
     {path: "sign-up", component:SignUpComponent},
     {path: "full-post/:id", component:FullPostComponent},
+    {path: "personal-area/:id", component:PersonalAreaComponent}
 
 
 ];

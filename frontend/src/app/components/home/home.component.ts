@@ -47,12 +47,17 @@ export class HomeComponent implements OnInit {
         console.error(err);
         alert("Failed to sign out");
       }
-    })      
+    }) 
   }
 
   signUp(): void {
     this.router.navigate(["sign-up"])
   }
+
+
+personalArea(id:Number):void{
+    this.router.navigate(['personal-area'])
+}
 }
 //מהצאט
 // import { Component, OnInit } from '@angular/core';

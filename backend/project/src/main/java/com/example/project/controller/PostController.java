@@ -62,7 +62,7 @@ public class PostController {
         }
     }
 
-    @GetMapping("getPostsByCategoryId")
+    @GetMapping("/getPostsByCategoryId/{id}")
     public ResponseEntity<List<Post>>getPostsByCategoryId(@PathVariable Long id){
         try{
             List<Post> posts=postRepository.findPostsByCategoryId(id);

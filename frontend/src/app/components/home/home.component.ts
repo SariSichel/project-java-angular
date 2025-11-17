@@ -58,6 +58,11 @@ export class HomeComponent implements OnInit {
 personalArea(id:Number):void{
     this.router.navigate(['personal-area', id])
 }
+
+
+myPlayLists(id:Number){
+    this.router.navigate(['my-play-lists', id])
+}
 }
 //מהצאט
 // import { Component, OnInit } from '@angular/core';

@@ -1,1 +1,9 @@
 <p>my-play-lists works!</p>
+@if(playLists){
+    @for(playList of playLists; track $index){
+        <h3>{{playList.name}}</h3>
+        <h3>{{playList.creationDate}}</h3>
+
+        <button (click)="goToPlayList(playList.id)">enter to this play list</button>
+    }
+}

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import Category from '../../model/category.model';
 import { CategoriesService } from '../../services/categories.service';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-category-list',
@@ -13,7 +14,7 @@ export class CategoryListComponent {
   
   public categoriesList!:Category[]
 
-  constructor(private _categoryService: CategoriesService){}
+  constructor(private _categoryService: CategoriesService, private router:Router){}
 
   ngOnInit():void{
     this._categoryService. getCategoriesFromServer().subscribe({
@@ -24,6 +25,10 @@ export class CategoryListComponent {
         console.error(err);
       }
     })
+  }
+
+  categoryPosts(id:Number){
+    this.router.navigate(['posts-by-category', id])
   }
 
 }

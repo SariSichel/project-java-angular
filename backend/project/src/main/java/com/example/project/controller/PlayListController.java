@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequestMapping("api/PlayList")
 @RestController
 @CrossOrigin
@@ -42,6 +44,19 @@ public class PlayListController {
         try {
             PlayList c = playListRepository.save(p);
             return new ResponseEntity<>(c, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/getPlayListsByUserId/{id}")
+    public ResponseEntity<List<PlayList>> getPlayListsByUserId(@PathVariable Long id){
+        try{
+            List<PlayList> l=playListRepository.findPlayListsByUserId(id);
+            if(l==null){
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(l, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -2,6 +2,9 @@
 
 @if(categoriesList){
     @for(category of categoriesList; track $index){
-        <h4>{{category.name}}</h4>
+        <button (click)="categoryPosts(category.id)">
+
+            <h4>{{category.name}}</h4>
+        </button>
     }
 }

@@ -10,7 +10,7 @@ public class PlayList {
     @Id
     @GeneratedValue
     private int Id;
-    private String Name;
+    private String name;
     private LocalDate creationDate;
     private LocalDate lastUpdated;
 
@@ -23,7 +23,7 @@ public class PlayList {
 
     public PlayList(int platListId, String playListName, LocalDate creationDate, LocalDate lastUpdated, Users user, List<Post> posts) {
         this.Id = platListId;
-        this.Name = playListName;
+        this.name = playListName;
         this.creationDate = creationDate;
         this.lastUpdated = lastUpdated;
         this.user = user;
@@ -43,11 +43,11 @@ public class PlayList {
     }
 
     public String getPlayListName() {
-        return Name;
+        return name;
     }
 
     public void setPlayListName(String playListName) {
-        this.Name = playListName;
+        this.name = playListName;
     }
 
     public LocalDate getCreationDate() {

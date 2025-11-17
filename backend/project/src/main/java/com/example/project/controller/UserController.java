@@ -59,7 +59,7 @@ public class UserController {
 
     public ResponseEntity<UserDTO> getUserSignUpById(@PathVariable Long userId){
         try{
-            Users u=userRepository.findById(userId).get();
+            Users u=userRepository.findById(userId).orElse(null);
             if(u==null){
                 return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
             }
@@ -144,6 +144,18 @@ public class UserController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+//מהצאט
+    @GetMapping("/status")
+    public ResponseEntity<Boolean> status() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal())) {
+            return ResponseEntity.ok(true);
+        }
+
+        return ResponseEntity.ok(false);
+    }
+
 
 //    @PostMapping("/addUser")
 //    public ResponseEntity<Users> addUser(@RequestPart("photo") MultipartFile photo, @RequestPart("post") Users u){

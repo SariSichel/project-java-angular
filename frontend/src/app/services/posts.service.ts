@@ -32,6 +32,11 @@ addPostToServer(formData: FormData): Observable<Post> {
   }
 
 
+  getPostsByCategoryFromServer(categoryId:Number):Observable<Post[]>{
+    //לבדוק שזה הניתוב המדוייק
+    return this._httpClient.get<Post[]>(`http://localhost:8080/api/Post/getPostsByCategoryId/${categoryId}`,{withCredentials: true})
+  }
+
 }
   // addPostToServer(formData: FormData): Observable<Post> {
   //   // שולח עם cookies ל־JWT

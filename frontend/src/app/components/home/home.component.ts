@@ -56,7 +56,7 @@ export class HomeComponent implements OnInit {
 
 
 personalArea(id:Number):void{
-    this.router.navigate(['personal-area'])
+    this.router.navigate(['personal-area', id])
 }
 }
 //מהצאט

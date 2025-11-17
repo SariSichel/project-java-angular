@@ -17,6 +17,7 @@ export class PersonalAreaComponent {
 
   public user!:User;
   public selectedPhoto: File | null = null;
+   public userToChange!:User
 ngOnInit():void{
   var id:Number;
   this.route.params.subscribe((params)=>{
@@ -24,6 +25,12 @@ ngOnInit():void{
     this.userService.getUserByIdFromServer(id).subscribe({
       next:(res)=>{
         this.user=res;
+        this.userToChange ={
+    id:this.user.id,
+    name:this.user.name,
+    mail:this.user.mail,
+    photoPath:this.user.photoPath
+  }
       },
       error:(err)=>{
         console.error('Error fetching user:', err);
@@ -32,19 +39,18 @@ ngOnInit():void{
   });
   }
 
-  public userToChange:User={
-    id:this.user.id,
-    name:this.user.name,
-    mail:this.user.mail,
-    photoPath:this.user.photoPath
-  }
+
 
 onPhotoSelected(event:any, type: 'photo'):void{
   this.selectedPhoto = event.target.files[0];
 }
 updateUser(){
   const formData = new FormData();
-  formData.append('photo', this.selectedPhoto!);
+  // formData.append('photo', this.selectedPhoto!);
+  if (this.selectedPhoto) {
+  formData.append('photo', this.selectedPhoto);
+}
+
   const userBlob=new Blob([JSON.stringify({
     id:this.userToChange.id,
     name:this.userToChange.name,
@@ -52,16 +58,16 @@ updateUser(){
     photoPath:this.userToChange.photoPath
   })], {type:'application/json'});
   formData.append('userUpdate',userBlob); 
-// לעשות בשרת פונקציית PUT
-  // this.userService.updateUserOnServer(formData).subscribe({
-  //   next:(res)=>{
-  //     alert("User updated successfully!");
-  //   },
-  //   error:(err)=>{
-  //     console.error(err);
-  //     alert("Failed to update user");
-  //   }
-  // });
+
+  this.userService.updateUser(formData).subscribe({
+    next:(res)=>{
+      alert("User updated successfully!");
+    },
+    error:(err)=>{
+      console.error(err);
+      alert("Failed to update user");
+    }
+  });
 }
 
 }

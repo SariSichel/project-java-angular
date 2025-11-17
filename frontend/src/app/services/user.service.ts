@@ -125,7 +125,12 @@ export class UserService {
 getUserByIdFromServer(id: Number): Observable<User> {
 
   //לשים ניתוב לשרת
-  return this._httpClient.get<User>(`${id}`, { withCredentials: true });
+  return this._httpClient.get<User>(`http://localhost:8080/api/User/getUserById/${id}`, { withCredentials: true });
 }
+
+updateUser(user: FormData): Observable<User> {
+
+  //לשים ניתוב לשרת
+  return this._httpClient.put<User>(`http://localhost:8080/api/User/updateUser`, user, { withCredentials: true });  }
 
 }

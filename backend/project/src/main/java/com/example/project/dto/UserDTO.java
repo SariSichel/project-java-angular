@@ -2,16 +2,16 @@ package com.example.project.dto;
 
 public class UserDTO {
 
-    private int id;
+    private Long id;
     private String Name;
     private String mail;
     private String photoPath;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         id = id;
     }
 

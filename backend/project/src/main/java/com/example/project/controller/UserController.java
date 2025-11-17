@@ -54,7 +54,9 @@ public class UserController {
     }
 
     @GetMapping("/getUserById/{userId}")
-    @PreAuthorize("@postRepository.findById(#userId).orElse(null)?.poster.userId == authentication.principal.id")
+   @PreAuthorize("@postRepository.findById(#userId).orElse(null)?.poster.userId == authentication.principal.id")
+    //@PreAuthorize("#userId == authentication.principal.id")
+
     public ResponseEntity<UserDTO> getUserSignUpById(@PathVariable Long userId){
         try{
             Users u=userRepository.findById(userId).get();
@@ -112,6 +114,35 @@ public class UserController {
         ResponseCookie cookie=jwtUtils.getCleanJwtCookie();
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE,cookie.toString())
                 .body("you've been signed out!");
+    }
+
+
+    @PutMapping("/updateUser")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<Users> updateUser(
+            @RequestPart("photo") MultipartFile photo,
+            @RequestPart("userUpdate") UserDTO userUpdate) {
+
+        try {
+            Users u1 = userRepository.findById(userUpdate.getId()).orElse(null);
+            if (u1 == null)
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+
+            // אם יש תמונה — שומרים
+            if (photo != null && !photo.isEmpty()) {
+                PhotoUtils.uploadImage(photo);
+                u1.setPhotoPath(photo.getOriginalFilename());
+            }
+
+            u1.setMail(userUpdate.getMail());
+            u1.setName(userUpdate.getName());
+
+            userRepository.save(u1);
+            return new ResponseEntity<>(u1, HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 //    @PostMapping("/addUser")

@@ -54,8 +54,8 @@ public class UserController {
     }
 
     @GetMapping("/getUserById/{userId}")
-   @PreAuthorize("@postRepository.findById(#userId).orElse(null)?.poster.userId == authentication.principal.id")
-    //@PreAuthorize("#userId == authentication.principal.id")
+   //@PreAuthorize("@postRepository.findById(#userId).orElse(null)?.poster.userId == authentication.principal.id")
+    @PreAuthorize("#userId == authentication.principal.id")
 
     public ResponseEntity<UserDTO> getUserSignUpById(@PathVariable Long userId){
         try{
@@ -118,7 +118,8 @@ public class UserController {
 
 
     @PutMapping("/updateUser")
-    @PreAuthorize("hasRole('USER')")
+    //@PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('ADMIN') or #userUpdate.id == authentication.principal.id")
     public ResponseEntity<Users> updateUser(
             @RequestPart("photo") MultipartFile photo,
             @RequestPart("userUpdate") UserDTO userUpdate) {

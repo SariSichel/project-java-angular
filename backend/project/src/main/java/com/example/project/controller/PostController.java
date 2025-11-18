@@ -1,11 +1,13 @@
 package com.example.project.controller;
 
+import com.example.project.dto.ChatRequest;
 import com.example.project.dto.PostDTO;
 import com.example.project.mappers.CategoryMapper;
 import com.example.project.mappers.CommentMapper;
 import com.example.project.mappers.PostMapper;
 import com.example.project.mappers.UserMapper;
 import com.example.project.model.Post;
+import com.example.project.service.AIChatService;
 import com.example.project.service.AudioUtils;
 import com.example.project.service.PhotoUtils;
 import com.example.project.service.PostRepository;
@@ -20,6 +22,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -36,14 +39,17 @@ public class PostController {
     UserMapper userMapper;
     CategoryMapper categoryMapper;
     CommentMapper commentMapper;
+    private AIChatService aiChatService;
+
 
     @Autowired
-    public PostController(PostRepository postRepository, PostMapper postMapper, UserMapper userMapper, CategoryMapper categoryMapper, CommentMapper commentMapper) {
+    public PostController(PostRepository postRepository, PostMapper postMapper, UserMapper userMapper, CategoryMapper categoryMapper, CommentMapper commentMapper,AIChatService aiChatService) {
         this.postRepository = postRepository;
         this.postMapper = postMapper;
         this.userMapper = userMapper;
         this.categoryMapper = categoryMapper;
         this.commentMapper = commentMapper;
+        this.aiChatService=aiChatService;
     }
 
 
@@ -110,8 +116,7 @@ public class PostController {
 public ResponseEntity<Post> addPost(
         @RequestPart("photo") MultipartFile photo,
         @RequestPart("post") Post p,
-        @RequestPart("audio") MultipartFile audio) {
-
+        @Valid @RequestPart("audio") MultipartFile audio) {
     try {
         // 1. העלאת תמונה: PhotoUtils שומר את התמונה ומחזיר את הנתיב לשם שלה
         //    (כדאי לוודא שגם PhotoUtils יוצר GUID ושומר אותו ב-p.setPhotoPath)
@@ -172,7 +177,8 @@ public ResponseEntity<Post> addPost(
 
     @PutMapping("/updatePostById/{postId}")
     @PreAuthorize("@postRepository.findById(#postId).orElse(null)?.poster.userId == authentication.principal.id")
-    public ResponseEntity<Post> updatePostById(@RequestBody PostDTO p, @PathVariable Long postId) {
+    public ResponseEntity<Post> updatePostById( @Valid @RequestBody PostDTO p,@PathVariable Long postId) {
+
         try {
             Post p1 = postRepository.findById(postId).get();
             if (p1 == null) {
@@ -192,6 +198,11 @@ public ResponseEntity<Post> addPost(
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/chat")
+    public String getResponse(@RequestBody ChatRequest chatRequest){
+        return aiChatService.getResponse(chatRequest.message(), chatRequest.conversationId());
     }
 
 }

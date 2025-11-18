@@ -29,6 +29,8 @@ import com.example.project.service.PhotoUtils;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/User")
 @CrossOrigin
@@ -70,7 +72,7 @@ public class UserController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> signin(@RequestBody UserSignInDTO u){
+    public ResponseEntity<?> signin(@Valid @RequestBody UserSignInDTO u){
 
         Authentication authentication=authenticationManager
         .authenticate(new UsernamePasswordAuthenticationToken(u.getName(),u.getPassword()));
@@ -87,7 +89,7 @@ public class UserController {
     }
 
     @PostMapping("/signUp")
-    public ResponseEntity <UserDTO> signUp(@RequestPart("photo") MultipartFile photo, @RequestPart("userSignUp") UserSignUpDTO userSignUp){
+    public ResponseEntity <UserDTO> signUp(@Valid @RequestPart("photo") MultipartFile photo, @RequestPart("userSignUp") UserSignUpDTO userSignUp){
         Users u=userRepository.findByName(userSignUp.getName());
         if(u!=null)
             return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -109,7 +111,7 @@ public class UserController {
     }
 
     @PostMapping("/signout")
-    @PreAuthorize("hasRole('USER')")
+     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> signOut(){
         ResponseCookie cookie=jwtUtils.getCleanJwtCookie();
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE,cookie.toString())
@@ -121,6 +123,7 @@ public class UserController {
     //@PreAuthorize("hasRole('USER')")
     @PreAuthorize("hasRole('ADMIN') or #userUpdate.id == authentication.principal.id")
     public ResponseEntity<Users> updateUser(
+            @Valid
             @RequestPart("photo") MultipartFile photo,
             @RequestPart("userUpdate") UserDTO userUpdate) {
 

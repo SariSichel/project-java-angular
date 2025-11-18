@@ -2,6 +2,9 @@ package com.example.project.model;
 
 import jakarta.persistence.*;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -10,12 +13,17 @@ public class Post {
     @Id
     @GeneratedValue
     private Long id;
+    @NotNull
+    @Min(value = 2, message = "name must be at least 2 chars")
+    @Max(value = 50, message = "name must be at most 50 chars")
     private String name;
     private String description;
     private String lyrics;
+    @NotNull
     private String audioPath;
     private LocalDate uploadDate;
     private LocalDate updateDate;
+    @NotNull
     private String photoPath;
     private String usersTookPart;
 
@@ -23,6 +31,7 @@ public class Post {
    @ManyToOne
     private Users user;
 
+   @NotNull
    @ManyToOne
    private Category category;
 

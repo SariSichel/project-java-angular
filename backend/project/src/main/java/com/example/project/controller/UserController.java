@@ -29,7 +29,7 @@ import com.example.project.service.PhotoUtils;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/User")
@@ -88,23 +88,57 @@ public class UserController {
                 .body(userDetails.getUsername());
     }
 
-    @PostMapping("/signUp")
-    public ResponseEntity <UserDTO> signUp(@Valid @RequestPart("photo") MultipartFile photo, @RequestPart("userSignUp") UserSignUpDTO userSignUp){
-        Users u=userRepository.findByName(userSignUp.getName());
-        if(u!=null)
-            return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        try{
-            PhotoUtils.uploadImage(photo);
-            userSignUp.setPhotoPath((photo.getOriginalFilename()));
+//    @PostMapping("/signUp")
+//    public ResponseEntity <UserDTO> signUp(@Valid @RequestPart("photo") MultipartFile photo, @RequestPart("userSignUp") UserSignUpDTO userSignUp){
+//        Users u=userRepository.findByName(userSignUp.getName());
+//        if(u!=null)
+//            return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        try{
+//            PhotoUtils.uploadImage(photo);
+//            userSignUp.setPhotoPath((photo.getOriginalFilename()));
+//
+//            String password=userSignUp.getPassword();
+//            userSignUp.setPassword(new BCryptPasswordEncoder().encode(password));
+//
+//            Users user=userSignUpMapper.userSignUpDTOtoUser(userSignUp);
+//              user.getRoles().add(roleRepository.findById((long)1).get());
+//              userRepository.save(user);
+//               return new ResponseEntity<>(userMapper.userToDTO(user),HttpStatus.CREATED);
+//    }catch (Exception e){
+//            e.printStackTrace();
+//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
-            String password=userSignUp.getPassword();
+    @PostMapping("/signUp")
+    public ResponseEntity<UserDTO> signUp(
+            @RequestPart("photo") MultipartFile photo,
+            @Valid @RequestPart("userSignUp") UserSignUpDTO userSignUp) {
+
+        Users u = userRepository.findByName(userSignUp.getName());
+        if (u != null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        try {
+            // בדוק אם יש תמונה
+            if (photo == null || photo.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+
+            PhotoUtils.uploadImage(photo);
+            // עכשיו זה הגיוני - את מגדירה את הנתיב אחרי ההעלאה
+            userSignUp.setPhotoPath(photo.getOriginalFilename());
+
+            String password = userSignUp.getPassword();
             userSignUp.setPassword(new BCryptPasswordEncoder().encode(password));
 
-            Users user=userSignUpMapper.userSignUpDTOtoUser(userSignUp);
-              user.getRoles().add(roleRepository.findById((long)1).get());
-              userRepository.save(user);
-               return new ResponseEntity<>(userMapper.userToDTO(user),HttpStatus.CREATED);
-    }catch (Exception e){
+            Users user = userSignUpMapper.userSignUpDTOtoUser(userSignUp);
+            user.getRoles().add(roleRepository.findById(1L).get());
+            userRepository.save(user);
+
+            return new ResponseEntity<>(userMapper.userToDTO(user), HttpStatus.CREATED);
+
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -123,9 +157,9 @@ public class UserController {
     //@PreAuthorize("hasRole('USER')")
     @PreAuthorize("hasRole('ADMIN') or #userUpdate.id == authentication.principal.id")
     public ResponseEntity<Users> updateUser(
-            @Valid
+
             @RequestPart("photo") MultipartFile photo,
-            @RequestPart("userUpdate") UserDTO userUpdate) {
+            @Valid @RequestPart("userUpdate") UserDTO userUpdate) {
 
         try {
             Users u1 = userRepository.findById(userUpdate.getId()).orElse(null);

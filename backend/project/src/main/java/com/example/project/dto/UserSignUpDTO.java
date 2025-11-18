@@ -1,27 +1,24 @@
 package com.example.project.dto;
 
-import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.*;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
-@Validated
+//@Validated
 public class UserSignUpDTO {
 
-    @NotNull
-    @Size(min = 2, max = 50, message = "name must be between 2 and 50 chars") // עדיף להשתמש ב-@Size במקום @Min/@Max על String    @Min(value = 2, message = "name must be at least 2 chars")
+    @NotBlank(message = "name is required")
+    @Size(min = 2, max = 50, message = "name must be between 2 and 50 chars")// עדיף להשתמש ב-@Size במקום @Min/@Max על String    @Min(value = 2, message = "name must be at least 2 chars")
     private String name;
-    @NotNull
+    @NotBlank(message = "mail is required")
     @Email(message="mail should be valid")
     private String mail;
-    @NotNull
-    @Min(value = 4, message = "password must be at least 4 chars")
+    @NotBlank(message = "password is required")
+    @Size(min = 4, message = "password must be at least 4 chars")
     private String password;
     private String photo;
-    @NotNull
+    //@NotNull(message = "photoPath is required")
     private String photoPath;
 
     public String getName() {

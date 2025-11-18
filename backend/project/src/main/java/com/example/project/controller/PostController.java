@@ -21,8 +21,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.validation.Valid;
+
+//import javax.validation.Valid;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -115,8 +116,8 @@ public class PostController {
 @PreAuthorize("hasRole('USER')")
 public ResponseEntity<Post> addPost(
         @RequestPart("photo") MultipartFile photo,
-        @RequestPart("post") Post p,
-        @Valid @RequestPart("audio") MultipartFile audio) {
+        @Valid @RequestPart("post") Post p,
+         @RequestPart("audio") MultipartFile audio) {
     try {
         // 1. העלאת תמונה: PhotoUtils שומר את התמונה ומחזיר את הנתיב לשם שלה
         //    (כדאי לוודא שגם PhotoUtils יוצר GUID ושומר אותו ב-p.setPhotoPath)

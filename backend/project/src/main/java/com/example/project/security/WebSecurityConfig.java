@@ -80,6 +80,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/User/sign**").permitAll()
                         .requestMatchers("/api/Post/getPosts").permitAll()
                         .requestMatchers("/api/Category/getCategories").permitAll()
+                        .requestMatchers("/api/Post/chat").permitAll()
                         .requestMatchers("/api/Post/getPostById/**").authenticated()
                         .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()

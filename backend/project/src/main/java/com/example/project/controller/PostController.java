@@ -93,25 +93,6 @@ public class PostController {
         }
     }
 
-//    @PostMapping("/addPost")
-//    @PreAuthorize("hasRole('USER')")
-//    public ResponseEntity<Post> addPost(@RequestPart("photo") MultipartFile photo, @RequestPart("post") Post p, @RequestPart("audio") MultipartFile audio) {
-//        try {
-//
-//            PhotoUtils.uploadImage(photo);
-//            AudioUtils.uploadAudio(audio);
-//
-//            p.setPhotoPath((photo.getOriginalFilename()));
-//            p.setAudioPath(audio.getOriginalFilename());
-//
-//            Post post = postRepository.save(p);
-//            return new ResponseEntity<>(post, HttpStatus.CREATED);
-//
-//        } catch (Exception e) {
-//            System.out.println(e);
-//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
 @PostMapping("/addPost")
 @PreAuthorize("hasRole('USER')")
 public ResponseEntity<Post> addPost(

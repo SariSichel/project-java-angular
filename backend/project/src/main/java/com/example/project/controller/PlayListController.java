@@ -50,6 +50,8 @@ public class PlayListController {
     }
 
     @GetMapping("/getPlayListsByUserId/{id}")
+    @PreAuthorize("hasRole('USER')")
+
     public ResponseEntity<List<PlayList>> getPlayListsByUserId(@PathVariable Long id){
         try{
             List<PlayList> l=playListRepository.findPlayListsByUserId(id);

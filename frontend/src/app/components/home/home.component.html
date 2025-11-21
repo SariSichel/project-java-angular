@@ -1,12 +1,13 @@
 
 
 <nav>
-  <button (click)="signIn()">sign in</button>
-  <button (click)="signUp()">sign up</button>
-  <button (click)="signOut()">sign out</button>
+ <button (click)="signIn()">sign in</button>
+ <button (click)="signUp()">sign up</button>
+ <button (click)="signOut()">sign out</button>
 <!-- //להכניס אי די של המשתמש -->
-<button (click)="personalArea(99)">my personal area</button>
-<button (click)="myPlayLists(99)">my play lists</button>
+<button (click)="personalArea()" [disabled]="!(isLoggedIn$ | async)">my personal area</button>
+<button (click)="myPlayLists()" [disabled]="!(isLoggedIn$ | async)">my play lists</button>
+<button (click)="myPosts()" [disabled]="!(isLoggedIn$ | async)">My Posts</button>
 </nav>
 
 <app-post-list></app-post-list>

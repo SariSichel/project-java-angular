@@ -1,0 +1,70 @@
+.skeleton-form {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.skeleton-line {
+  height: 50px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 8px;
+}
+
+.skeleton-line.title {
+  height: 60px;
+  width: 70%;
+}
+
+.skeleton-line.short {
+  width: 40%;
+}
+
+.skeleton-block.textarea {
+  height: 100px;
+}
+
+.skeleton-block.textarea.tall {
+  height: 200px;
+}
+
+.skeleton-image {
+  height: 300px;
+  width: 300px;
+  background: linear-gradient(90deg, #e0e0e0 25%, #d0d0d0 50%, #e0e0e0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 12px;
+  align-self: center;
+}
+
+.skeleton-line.audio {
+  width: 60%;
+}
+
+.skeleton-button {
+  height: 50px;
+  width: 180px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #ddd 25%, #ccc 50%, #ddd 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+.skeleton-button.secondary {
+  width: 120px;
+  opacity: 0.7;
+  margin-top: 10px;
+}
+
+/* האנימציה שגורמת לזה "להבהב" */
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

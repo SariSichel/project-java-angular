@@ -2,7 +2,7 @@ import User from "./user.model"
 
 export default class Comment{
     id!:Number
-    text?:Text
+    text?:string
     rating?:Number
     updateDate!:Date
     userName!:User

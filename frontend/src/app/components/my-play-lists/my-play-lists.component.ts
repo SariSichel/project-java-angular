@@ -11,13 +11,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class MyPlayListsComponent {
   public playLists!:PlayList[]
+  
   constructor(private playListService: PlayListService, private route:ActivatedRoute, private router: Router){}
 
   ngOnInit():void{
     var id:Number;
-      this.route.params.subscribe((params)=>{
+    this.route.params.subscribe((params)=>{
     id=params['id'];
-  this.playListService.getPlayListsByUserIdFromServer(id).subscribe({
+    this.playListService.getPlayListsByUserIdFromServer(id).subscribe({
       next:(res)=>{
         this.playLists=res;
       },

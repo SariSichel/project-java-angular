@@ -8,17 +8,12 @@ export default class Post{
     name !: string
     description ?:string
     lyrics?: string
-    //איך מביאים את האודיו לכאן
-
-    //צריך גם את הניתוב?
     audioPath!: string
     uploadDate!: Date
     updateDate?:Date
-    //אותן שאלות על התמונה
     photoPath?:string
     user!:User
     category!:CategoryName
-    // לבדוק אם לשנות את זה לסטרינג
     usersTookPart!:string
     comments!:Comment[]
 

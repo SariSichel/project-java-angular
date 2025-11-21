@@ -13,7 +13,7 @@ export class CategoriesService {
   public categoriesList: CategoryName[]=[]
 
   //פונקציה שמחזירה את כל הקטגוריות מהשרת
-  getCategoriesFromServer():Observable<CategoryName[]>{
+  getCategoriesFromServer():Observable<any>{
     return this._httpClient.get<CategoryName[]>(`http://localhost:8080/api/Category/getCategories`)
   }
 

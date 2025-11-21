@@ -29,7 +29,8 @@ export class FullPostComponent {
 
         this.postService.getAudio(this.post.audioPath).subscribe({
           next: (audioBlob) => {
-                this.audioUrl = URL.createObjectURL(audioBlob);          },
+                this.audioUrl = URL.createObjectURL(audioBlob);         
+          },
           error: (err) => {
             // טיפול בשגיאת קבלת האודיו
             console.error('Error fetching audio:', err); 

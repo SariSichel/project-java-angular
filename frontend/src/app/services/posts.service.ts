@@ -19,7 +19,7 @@ export class PostsService {
   getPostsFromServer():Observable<Post[]>{
     return this._httpClient.get<Post[]>(`http://localhost:8080/api/Post/getPosts`)
   }
-addPostToServer(formData: FormData): Observable<Post> {
+  addPostToServer(formData: FormData): Observable<Post> {
     return this._httpClient.post<Post>(`http://localhost:8080/api/Post/addPost`, formData, {withCredentials: true});
   }
 
@@ -31,11 +31,18 @@ addPostToServer(formData: FormData): Observable<Post> {
     return this._httpClient.get(`http://localhost:8080/api/Post/audio/${audioPath}`, { responseType: 'blob', withCredentials: true });
   }
 
+  update(id: number, data: FormData): Observable<any> {
+    return this._httpClient.put(`http://localhost:8080/api/Post/updatePostByPostId/${id}`, data,{withCredentials: true});
+  }
 
   getPostsByCategoryFromServer(categoryId:Number):Observable<Post[]>{
     //לבדוק שזה הניתוב המדוייק
     return this._httpClient.get<Post[]>(`http://localhost:8080/api/Post/getPostsByCategoryId/${categoryId}`,{withCredentials: true})
   }
+
+  getPostsByUserIdFromServer(userId:Number):Observable<Post[]>{
+    return this._httpClient.get<Post[]>(`http://localhost:8080/api/Post/getPostsByUserId/${userId}`,{withCredentials: true})
+  } 
 
 }
   // addPostToServer(formData: FormData): Observable<Post> {

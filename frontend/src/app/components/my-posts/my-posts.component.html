@@ -1,0 +1,14 @@
+<p>my-posts works!</p>
+
+@if(posts){
+    @for(post of posts; track post.id){
+        
+        <h3>{{post.name}}</h3>
+
+        <!-- <img [src]="'data:image/jpeg;base64,' + post.photoPath" width="300" style="height:auto;" /> -->
+
+        <button (click)="updatePost(post.id)">update this post</button>
+
+        <button (click)="goToPost(post.id)">enter to this post</button>
+    }
+}

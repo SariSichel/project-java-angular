@@ -8,6 +8,8 @@ import { PersonalAreaComponent } from './components/personal-area/personal-area.
 import { PostsByCategoryComponent } from './components/posts-by-category/posts-by-category.component';
 import { PlayListComponent } from './components/play-list/play-list.component';
 import { MyPlayListsComponent } from './components/my-play-lists/my-play-lists.component';
+import { UpdatePostComponent } from './components/update-post/update-post.component';
+import { MyPostsComponent } from './components/my-posts/my-posts.component';
 
 
 export const routes: Routes = [
@@ -20,7 +22,11 @@ export const routes: Routes = [
     {path: "personal-area/:id", component:PersonalAreaComponent},
     {path: "posts-by-category/:id", component:PostsByCategoryComponent},
     {path: "play-list/:id", component:PlayListComponent},
-    {path:"my-play-lists/:id", component:MyPlayListsComponent}
+    {path:"my-play-lists/:id", component:MyPlayListsComponent},
+    {path:"update-post/:id", component:UpdatePostComponent},
+    {path:"my-posts/:id", component:MyPostsComponent}
+
+
 
 
 ];

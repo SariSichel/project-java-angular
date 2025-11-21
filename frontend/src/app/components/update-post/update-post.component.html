@@ -1,1 +1,78 @@
-<p>update-post works!</p>
+<div class="edit-post-container">
+
+  <h2>עריכת פוסט</h2>
+
+  <!-- ====== SKELETON LOADING ====== -->
+  @if (isLoading) {
+    <div class="skeleton-form">
+
+      <div class="skeleton-line title"></div>
+
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line short"></div>
+
+      <div class="skeleton-block textarea"></div>
+      <div class="skeleton-block textarea tall"></div>
+
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line short"></div>
+
+      <div class="skeleton-image"></div>
+
+      <div class="skeleton-line audio"></div>
+
+      <div class="skeleton-button"></div>
+      <div class="skeleton-button secondary"></div>
+    </div>
+  }
+
+  <!-- ====== הטופס האמיתי ====== -->
+  @else {
+    <form [formGroup]="postForm" (ngSubmit)="onSubmit()">
+
+      <div class="form-group">
+        <label>כותרת הפוסט <span class="required">*</span></label>
+        <input type="text" formControlName="name">
+      </div>
+
+      <div class="form-group">
+        <label>תיאור</label>
+        <textarea formControlName="description" rows="3"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>מילים</label>
+        <textarea formControlName="lyrics" rows="8"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>קטגוריה <span class="required">*</span></label>
+        <select formControlName="categoryId">
+          <option value="">-- בחר קטגוריה --</option>
+          @for (cat of categoriesList; track cat.id) {
+            <option [value]="cat.id">{{ cat.name }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>תמונת כריכה</label>
+        @if (photoPreview) {
+          <img [src]="photoPreview" class="preview-img" alt="תמונה נוכחית">
+        }
+        <input type="file" accept="image/*" (change)="onPhotoSelected($event)">
+      </div>
+
+      <div class="form-group">
+        <label>קובץ אודיו</label>
+        <p>{{ audioFileName }}</p>
+        <input type="file" accept="audio/*" (change)="onAudioSelected($event)">
+      </div>
+
+      <div class="actions">
+        <button type="submit" [disabled]="postForm.invalid">שמור שינויים</button>
+        <button type="button" (click)="cancel()">ביטול</button>
+      </div>
+    </form>
+  }
+</div>

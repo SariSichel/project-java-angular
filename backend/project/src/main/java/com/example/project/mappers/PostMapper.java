@@ -29,6 +29,10 @@ public interface PostMapper {
     @Mapping(target = "photoPath", source = "photoPath", qualifiedByName = "loadImage")
     PostDTO postToPostDTO(Post post);
 
+    //?
+//    @Mapping(target = "post.category", source = "post.category")
+//    Post updatePostFromPostDto(PostDTO post, Post post2);
+
 //    default PostDTO postToDTO(Post p) throws IOException
 //    {
 //        PostDTO postDTO=new PostDTO();

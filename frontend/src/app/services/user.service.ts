@@ -85,51 +85,48 @@ export class UserService {
 
 
 
-  // 🟢 פונקציה לבדיקת סטטוס מול השרת (כמו בגרסה הראשונה שצירפת)
-  private checkLoginStatus(): void {
-    this._httpClient.get<boolean>(`${this.apiUrl}/status`, { withCredentials: true }).subscribe({
-      next: (status) => this.setLoggedIn(status),
-      error: () => this.setLoggedIn(false) // אם יש שגיאה, מניחים שלא מחובר
-    });
-  }
+ // 🟢 פונקציה לבדיקת סטטוס מול השרת (כמו בגרסה הראשונה שצירפת)
+ private checkLoginStatus(): void { this._httpClient.get<boolean>(`${this.apiUrl}/status`, { withCredentials: true }).subscribe({
+   next: (status) => this.setLoggedIn(status),
+    error: () => this.setLoggedIn(false) // אם יש שגיאה, מניחים שלא מחובר
+  });
+ }
 
   
-  signUp(formData: FormData): Observable<User> {
-    // לאחר הרשמה מוצלחת וקבלת עוגייה, נעדכן את הסטטוס
-    return this._httpClient.post<User>(`${this.apiUrl}/signUp`, formData, {withCredentials: true}).pipe(
-      tap(() => this.setLoggedIn(true)) 
-    );
-  }
+ signUp(formData: FormData): Observable<User> {
+  // לאחר הרשמה מוצלחת וקבלת עוגייה, נעדכן את הסטטוס
+  return this._httpClient.post<User>(`${this.apiUrl}/signUp`, formData, {withCredentials: true}).pipe(
+   tap(() => this.setLoggedIn(true)) 
+  );
+ }
 
-  signIn(userSignIn: UserSignIn): Observable<any> {
-    // לאחר כניסה מוצלחת וקבלת עוגייה, נעדכן את הסטטוס
-    return this._httpClient.post(`${this.apiUrl}/signin`, userSignIn, {
-      responseType: 'text',  
-      withCredentials: true
-    }).pipe(
-      tap(() => this.setLoggedIn(true)) // 👈 עדכון מצב
-    );
-  }
-  
-  signOut(): Observable<string> {
-    // לאחר יציאה מוצלחת, נעדכן את הסטטוס
-    return this._httpClient.post(`${this.apiUrl}/signout`, null, {
-      responseType: 'text',  
-      withCredentials: true
-    }).pipe(
-      tap(() => this.setLoggedIn(false)) // 👈 עדכון מצב
-    );
-  }
+ signIn(userSignIn: UserSignIn): Observable<any> {
+  // לאחר כניסה מוצלחת וקבלת עוגייה, נעדכן את הסטטוס
+  return this._httpClient.post(`${this.apiUrl}/signin`, userSignIn, {
+   responseType: 'text', 
+   withCredentials: true
+  }).pipe(
+   tap(() => this.setLoggedIn(true)) // 👈 עדכון מצב
+  );
+ }
+ 
+ signOut(): Observable<string> {
+  // לאחר יציאה מוצלחת, נעדכן את הסטטוס
+  return this._httpClient.post(`${this.apiUrl}/signout`, null, {
+   responseType: 'text', 
+   withCredentials: true
+  }).pipe(
+   tap(() => this.setLoggedIn(false)) // 👈 עדכון מצב
+  );
+ }
 
 
 getUserByIdFromServer(id: Number): Observable<User> {
-
   //לשים ניתוב לשרת
   return this._httpClient.get<User>(`http://localhost:8080/api/User/getUserById/${id}`, { withCredentials: true });
 }
 
 updateUser(user: FormData): Observable<User> {
-
   //לשים ניתוב לשרת
   return this._httpClient.put<User>(`http://localhost:8080/api/User/updateUser`, user, { withCredentials: true });  }
 

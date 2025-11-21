@@ -48,7 +48,7 @@ public class CommentController {
     public ResponseEntity<Comment> addComment(@RequestBody Comment c) {
         try {
             Comment c1 = commentRepository.save(c);
-            return new ResponseEntity<>(c, HttpStatus.CREATED);
+            return new ResponseEntity<>(c1, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

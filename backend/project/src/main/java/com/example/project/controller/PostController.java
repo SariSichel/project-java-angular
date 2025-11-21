@@ -36,7 +36,7 @@ public class PostController {
 
     PostRepository postRepository;
     PostMapper postMapper;
-    //לבדוק אם חייבים את הזרקות האלו
+    //לבדוק אם חייבים את ההזרקות האלו
     UserMapper userMapper;
     CategoryMapper categoryMapper;
     CommentMapper commentMapper;
@@ -82,6 +82,20 @@ public class PostController {
         }
     }
 
+    //האם צריך להחזיר פוסטים או פוסטים DTO ואותו דבר לפונ מעל
+    @GetMapping("/getPostsByUserId/{userId}")
+    public ResponseEntity<List<Post>>getPostsByUserId(@PathVariable Long userId){
+        try{
+            List<Post> posts=postRepository.findPostsByUserId(userId);
+            if(posts==null){
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(posts, HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("/getPosts")
     public ResponseEntity<List<PostDTO>> getPosts() {
         try {
@@ -93,12 +107,12 @@ public class PostController {
         }
     }
 
-@PostMapping("/addPost")
-@PreAuthorize("hasRole('USER')")
-public ResponseEntity<Post> addPost(
+    @PostMapping("/addPost")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<Post> addPost(
         @RequestPart("photo") MultipartFile photo,
         @Valid @RequestPart("post") Post p,
-         @RequestPart("audio") MultipartFile audio) {
+        @RequestPart("audio") MultipartFile audio) {
     try {
         // 1. העלאת תמונה: PhotoUtils שומר את התמונה ומחזיר את הנתיב לשם שלה
         //    (כדאי לוודא שגם PhotoUtils יוצר GUID ושומר אותו ב-p.setPhotoPath)
@@ -157,15 +171,17 @@ public ResponseEntity<Post> addPost(
         }
     }
 
-    @PutMapping("/updatePostById/{postId}")
+    //למה עדכנו לפוסט רגיל ולא DTO?
+    @PutMapping("/updatePostByPostId/{postId}")
     @PreAuthorize("@postRepository.findById(#postId).orElse(null)?.poster.userId == authentication.principal.id")
-    public ResponseEntity<Post> updatePostById( @Valid @RequestBody PostDTO p,@PathVariable Long postId) {
-
+    public ResponseEntity<Post> updatePostByPostId( @Valid @RequestBody PostDTO p,@PathVariable Long postId) {
         try {
             Post p1 = postRepository.findById(postId).get();
-            if (p1 == null) {
-                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-            }
+            //צריך לשנות את התנאי הזה כי הוא אף פעם לא יתקיים- .get() לעולם לא יחזיר null — הוא או יחזיר אובייקט, או יזרוק שגיאה
+//            if (p1 == null) {
+//                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+//            }
+//            postMapper.updatePostFromPostDto(p,p1);
             p1.setName(p.getName());
             p1.setDescription(p.getDescription());
             p1.setLyrics(p.getLyrics());

@@ -83,8 +83,20 @@ public class JwtUtils {
     //מה הפונקציה מחזירה?
     public ResponseCookie generateJwtCookie(CustomUserDetails userPrincipal) {
         String jwt = generateTokenFromUsername(userPrincipal.getUsername());
+        // 🔍 DEBUG
+        System.out.println("=== JWT Cookie Generation ===");
+        System.out.println("JWT length: " + jwt.length());
+        if (jwt.length() > 4000) {
+            System.err.println("⚠️ WARNING: JWT is very large! Length: " + jwt.length());
+        }
+
         ResponseCookie cookie = ResponseCookie.from("securitySample", jwt)
                 .path("/api").maxAge(24*60*60).httpOnly(true).build();
+
+        //
+        System.out.println("Cookie string length: " + cookie.toString().length());
+        //
+
         return cookie;
     }
     //********תפקיד הפונקציה:
@@ -94,4 +106,6 @@ public class JwtUtils {
         ResponseCookie cookie= ResponseCookie.from("securitySample",null).path("/api").build();
         return cookie;
     }
+
+
 }

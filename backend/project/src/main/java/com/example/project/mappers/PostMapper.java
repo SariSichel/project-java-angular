@@ -25,9 +25,11 @@ public interface PostMapper {
 
 //    בטרגט מה שיש בדי טי או ובסורס מה שיש ברגיל
     @Mapping(target = "user", source = "user")
-    @Mapping(target = "comments", source = "comments")
+    //, ignore = true   לא בטוח שצריך את זה
+    @Mapping(target = "comments", source = "comments", ignore = true )
     @Mapping(target = "photoPath", source = "photoPath", qualifiedByName = "loadImage")
     PostDTO postToPostDTO(Post post);
+
 
     //?
 //    @Mapping(target = "post.category", source = "post.category")

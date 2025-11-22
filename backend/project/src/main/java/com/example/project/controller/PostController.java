@@ -84,13 +84,16 @@ public class PostController {
 
     //האם צריך להחזיר פוסטים או פוסטים DTO ואותו דבר לפונ מעל
     @GetMapping("/getPostsByUserId/{userId}")
-    public ResponseEntity<List<Post>>getPostsByUserId(@PathVariable Long userId){
+    public ResponseEntity<List<PostDTO>>getPostsByUserId(@PathVariable Long userId){
         try{
             List<Post> posts=postRepository.findPostsByUserId(userId);
             if(posts==null){
                 return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
             }
-            return new ResponseEntity<>(posts, HttpStatus.OK);
+            List<PostDTO> postDTOs= postMapper.postsToDTO(posts);
+
+            return new ResponseEntity<>(postDTOs,HttpStatus.OK);
+//            return new ResponseEntity<>(posts, HttpStatus.OK);
         }catch(Exception e){
             return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -116,8 +119,13 @@ public class PostController {
     try {
         // 1. העלאת תמונה: PhotoUtils שומר את התמונה ומחזיר את הנתיב לשם שלה
         //    (כדאי לוודא שגם PhotoUtils יוצר GUID ושומר אותו ב-p.setPhotoPath)
-        PhotoUtils.uploadImage(photo);
-        p.setPhotoPath((photo.getOriginalFilename()));
+//        PhotoUtils.uploadImage(photo);
+//        p.setPhotoPath((photo.getOriginalFilename()));
+
+        //מהצאט 11/23
+        String photoName = PhotoUtils.uploadImage(photo);
+        p.setPhotoPath(photoName);
+
 
 
         // 2. העלאת אודיו: קריאה למתודה שמחזירה את שם הקובץ הייחודי + הסיומת
@@ -171,12 +179,17 @@ public class PostController {
         }
     }
 
-    //למה עדכנו לפוסט רגיל ולא DTO?
     @PutMapping("/updatePostByPostId/{postId}")
     @PreAuthorize("@postRepository.findById(#postId).orElse(null)?.poster.userId == authentication.principal.id")
-    public ResponseEntity<Post> updatePostByPostId( @Valid @RequestBody PostDTO p,@PathVariable Long postId) {
+    public ResponseEntity<PostDTO> updatePostByPostId(
+          @PathVariable Long postId,
+          @RequestPart("photo") MultipartFile photo,
+          @Valid @RequestPart("post") Post p,
+          @RequestPart("audio") MultipartFile audio) {
         try {
-            Post p1 = postRepository.findById(postId).get();
+            Post p1 = postRepository.findById(postId).orElse(null);
+            if(p1 == null)
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
             //צריך לשנות את התנאי הזה כי הוא אף פעם לא יתקיים- .get() לעולם לא יחזיר null — הוא או יחזיר אובייקט, או יזרוק שגיאה
 //            if (p1 == null) {
 //                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
@@ -186,13 +199,32 @@ public class PostController {
             p1.setDescription(p.getDescription());
             p1.setLyrics(p.getLyrics());
             p1.setUpdateDate(p.getUpdateDate());
-            p1.setPhotoPath(p.getPhotoPath());
             p1.setUsersTookPart(p.getUsersTookPart());
-            p1.setCategory(categoryMapper.categoryDTOtoCategory(p.getCategory()));
+            p1.setCategory(p.getCategory());
+
+
+            //יש התנהות אחרת בתמונה ובאודיו מה נכון?
+//            if (photo != null && !photo.isEmpty()) {
+//                PhotoUtils.uploadImage(photo);
+//                p1.setPhotoPath(photo.getOriginalFilename());
+//            }
+
+            //מהצאט 11/23
+            if (photo != null && !photo.isEmpty()) {
+                String photoName = PhotoUtils.uploadImage(photo);
+                p1.setPhotoPath(photoName);
+            }
+
+
+            // עדכון אודיו אם הועלה חדש
+            if (audio != null && !audio.isEmpty()) {
+                String uniqueAudioFileName = AudioUtils.uploadAudio(audio);
+                p1.setAudioPath(uniqueAudioFileName);
+            }
 
             postRepository.save(p1);
 
-            return new ResponseEntity<>(p1, HttpStatus.OK);
+            return new ResponseEntity<>(postMapper.postToPostDTO(p1), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }

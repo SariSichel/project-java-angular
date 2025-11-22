@@ -1,17 +1,14 @@
 package com.example.project.dto;
 
-import jakarta.validation.constraints.Email;
-
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 
 public class UserDTO {
 
     private Long id;
     @NotNull
-    @Min(value = 2, message = "name must be at least 2 chars")
-    @Max(value = 50, message = "name must be at most 50 chars")
+    @Size(min = 2, max = 50, message="name must be between 2 and 50 chars")
+//    @Min(value = 2, message = "name must be at least 2 chars")
+//    @Max(value = 50, message = "name must be at most 50 chars")
     private String Name;
     @NotNull
     @Email(message="mail should be valid")
@@ -24,7 +21,7 @@ public class UserDTO {
     }
 
     public void setId(Long id) {
-        id = id;
+        this.id = id;
     }
 
     public String getName() {

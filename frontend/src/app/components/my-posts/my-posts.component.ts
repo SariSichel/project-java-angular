@@ -23,8 +23,6 @@ ngOnInit():void{
 
   this._postService.getPostsByUserIdFromServer(id).subscribe({
     next:(res)=>{
-this.posts.forEach(p => console.log(p.photoPath));
-
       this.posts=res;
     },
     error:(err)=>{

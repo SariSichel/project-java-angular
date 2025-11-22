@@ -36,7 +36,6 @@ export class PostsService {
   }
 
   getPostsByCategoryFromServer(categoryId:Number):Observable<Post[]>{
-    //לבדוק שזה הניתוב המדוייק
     return this._httpClient.get<Post[]>(`http://localhost:8080/api/Post/getPostsByCategoryId/${categoryId}`,{withCredentials: true})
   }
 

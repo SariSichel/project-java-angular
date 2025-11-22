@@ -1,7 +1,7 @@
 <p>category-list works!</p>
 
 @if(categoriesList){
-    @for(category of categoriesList; track $index){
+    @for(category of categoriesList; track category.id){
         <button (click)="categoryPosts(category.id)">
 
             <h4>{{category.name}}</h4>

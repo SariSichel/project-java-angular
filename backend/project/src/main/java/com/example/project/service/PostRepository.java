@@ -9,7 +9,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     public boolean existsPostById (Long id);
     public  void deletePostById(Long id);
-    public List<Post> findPostsByCategoryId(Long id);
+//    public List<Post> findPostsByCategoryId(Long id);
     public List<Post> findPostsByUserId(Long id);
+
+    List<Post> findByCategory_Id(Long categoryId);
 
 }

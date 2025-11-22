@@ -70,13 +70,13 @@ public class PostController {
     }
 
     @GetMapping("/getPostsByCategoryId/{id}")
-    public ResponseEntity<List<Post>>getPostsByCategoryId(@PathVariable Long id){
+    public ResponseEntity<List<PostDTO>>getPostsByCategoryId(@PathVariable Long id){
         try{
-            List<Post> posts=postRepository.findPostsByCategoryId(id);
+            List<Post> posts=postRepository.findByCategory_Id(id);
             if(posts==null){
                 return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
             }
-            return new ResponseEntity<>(posts, HttpStatus.OK);
+            return new ResponseEntity<>(postMapper.postsToDTO(posts), HttpStatus.OK);
         }catch(Exception e){
             return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
         }

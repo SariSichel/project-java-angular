@@ -128,6 +128,6 @@ getUserByIdFromServer(id: Number): Observable<User> {
 
 updateUser(user: FormData): Observable<User> {
   //לשים ניתוב לשרת
-  return this._httpClient.put<User>(`http://localhost:8080/api/User/updateUser`, user, { withCredentials: true });  }
+  return this._httpClient.put<User>(`http://localhost:8080/api/User/updateUser`, user, { withCredentials: true , responseType: 'text' as 'json'});  }
 
 }

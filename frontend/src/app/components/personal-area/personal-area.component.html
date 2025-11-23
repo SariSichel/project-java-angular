@@ -27,7 +27,8 @@
     }
     <br><br>
              <label>photo:</label>
-        <input type="file" (change)="onPhotoSelected($event, 'photo')" accept="image/*" name="photo">
+              <img [src]="'data:image/jpeg;base64,' + user.photoPath" width="300" style="height:auto;" />
+        <input type="file" (change)="onPhotoSelected($event)" accept="image/*" name="photo">
 </form>
 <button (click)="updateUser()">Update User</button>
 </div>

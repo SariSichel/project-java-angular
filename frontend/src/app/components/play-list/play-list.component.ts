@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PostsService } from '../../services/posts.service';
 import Post from '../../model/post.model';
+import { PlayListService } from '../../services/play-list.service';
 
 @Component({
   selector: 'app-play-list',
@@ -11,15 +12,18 @@ import Post from '../../model/post.model';
 })
 export class PlayListComponent {
 public posts!:Post[];
-  constructor(private route:ActivatedRoute, private postService:PostsService, private router:Router) {}
+  constructor(private route:ActivatedRoute, private postService:PostsService, private router:Router, private playListService:PlayListService) {}
 
   ngOnInit() {
     var id:number;
      this.route.params.subscribe((params)=>{
       id=params['id'];
-this.postService.getPostByIdFromServer(id).subscribe({
+this.playListService.getPostsByPlayListIdFromServer(id).subscribe({
   next:(res)=>{
-// this.posts=res;
+      this.posts=res;
+  },
+  error:(err)=>{
+
   }
 })
      })

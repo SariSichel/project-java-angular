@@ -9,7 +9,7 @@ import java.util.List;
 public class PlayList {
     @Id
     @GeneratedValue
-    private int Id;
+    private int id;
     private String name;
     private LocalDate creationDate;
     private LocalDate lastUpdated;
@@ -22,7 +22,7 @@ public class PlayList {
     private List<Post> posts;
 
     public PlayList(int platListId, String playListName, LocalDate creationDate, LocalDate lastUpdated, Users user, List<Post> posts) {
-        this.Id = platListId;
+        this.id = platListId;
         this.name = playListName;
         this.creationDate = creationDate;
         this.lastUpdated = lastUpdated;
@@ -35,11 +35,11 @@ public class PlayList {
     }
 
     public int getId() {
-        return Id;
+        return id;
     }
 
     public void setId(int platListId) {
-        this.Id = platListId;
+        this.id = platListId;
     }
 
     public String getPlayListName() {

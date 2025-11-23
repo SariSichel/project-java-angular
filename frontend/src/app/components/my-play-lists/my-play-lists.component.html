@@ -1,6 +1,6 @@
 <p>my-play-lists works!</p>
 @if(playLists){
-    @for(playList of playLists; track $index){
+    @for(playList of playLists; track playList.id){
         <h3>{{playList.name}}</h3>
         <h3>{{playList.creationDate}}</h3>
 

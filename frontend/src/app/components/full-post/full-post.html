@@ -1,6 +1,21 @@
 <div>
 
     @if(post){
+      <button (click)="addToPlayList(post.id)">add to playList</button>
+      <br><br>
+      @if(showPlayList){
+          <select (change)="onPlayListSelected($event, post.id)">
+        <option value="">-- Select PlayList --</option>
+
+        @for(p of playLists; track p.id){
+          <option [value]="p.id">{{p.id}}</option>
+                
+
+        }
+      </select>
+            <br><br>
+
+      }
         <label>photo:</label>
         <img [src]="'data:image/jpeg;base64,' + post.photoPath" width="300" style="height:auto;" />
         <label>name:</label>
@@ -41,13 +56,11 @@
 </audio> -->
         <label>comments:</label>
         @for(comment of post.comments; track $index){
+          <!-- <h5>{{comment.userName.mail}}</h5> -->
           <h5>{{comment.text}}</h5>
-
-          <!-- @for (i of getLoopArray(loopLimit); track i) {
-  <div>
-    דיב מספר: {{ i }}
-  </div>
-} -->
+  @for (item of getArray(this.post.comments[$index].rating); track $index) {
+  <div style="background-color: yellow; border-radius: 50%;">{{$index}}</div>
+}
         }
 
     }

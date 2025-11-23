@@ -1,9 +1,9 @@
-<div class="edit-post-container">
+<!-- <div class="edit-post-container">
 
-  <h2>עריכת פוסט</h2>
+  <h2>עריכת פוסט</h2> -->
 
   <!-- ====== SKELETON LOADING ====== -->
-  @if (isLoading) {
+  <!-- @if (isLoading) {
     <div class="skeleton-form">
 
       <div class="skeleton-line title"></div>
@@ -24,10 +24,10 @@
       <div class="skeleton-button"></div>
       <div class="skeleton-button secondary"></div>
     </div>
-  }
+  } -->
 
   <!-- ====== הטופס האמיתי ====== -->
-  @else {
+  <!-- @else {
     <form [formGroup]="postForm" (ngSubmit)="onSubmit()">
 
       <div class="form-group">
@@ -75,4 +75,93 @@
       </div>
     </form>
   }
+</div> -->
+
+<div class="edit-post-container">
+
+    <h2>עריכת פוסט</h2>
+
+    @if (isLoading) {
+        <div class="skeleton-form">
+            <div class="skeleton-line title"></div>
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line short"></div>
+            <div class="skeleton-block textarea"></div>
+            <div class="skeleton-block textarea tall"></div>
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line short"></div>
+            <div class="skeleton-image"></div>
+            <div class="skeleton-line audio"></div>
+            <div class="skeleton-button"></div>
+            <div class="skeleton-button secondary"></div>
+        </div>
+    }
+
+    @if (!isLoading) {
+        <form [formGroup]="postForm" (ngSubmit)="onSubmit()">
+
+            <div class="form-group">
+                <label for="postName">כותרת הפוסט <span class="required">*</span></label>
+                <input id="postName" type="text" formControlName="name">
+                @if (postForm.get('name')?.invalid && postForm.get('name')?.touched) {
+                    <p class="error-message">אנא הזן כותרת חוקית (לפחות 2 תווים).</p>
+                }
+            </div>
+
+            <div class="form-group">
+                <label for="description">תיאור</label>
+                <textarea id="description" formControlName="description" rows="3"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="lyrics">מילים</label>
+                <textarea id="lyrics" formControlName="lyrics" rows="8"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="usersTookPart">משתמשים נוספים שלקחו חלק</label>
+                <input id="usersTookPart" type="text" formControlName="usersTookPart">
+            </div>
+
+            <div class="form-group">
+                <label for="categoryId">קטגוריה <span class="required">*</span></label>
+                <select id="categoryId" formControlName="categoryId">
+                    <option [ngValue]="null">-- בחר קטגוריה --</option>
+                    @if (categoriesList) {
+                        @for (cat of categoriesList; track cat.id) {
+                            <option [ngValue]="cat.id">{{ cat.name }}</option>
+                        }
+                    }
+                </select>
+                @if (postForm.get('categoryId')?.invalid && postForm.get('categoryId')?.touched) {
+                    <p class="error-message">אנא בחר קטגוריה.</p>
+                }
+            </div>
+
+            <div class="form-group file-upload-group">
+                <label>תמונת כריכה</label>
+                @if (photoPreview) {
+                    <img [src]="photoPreview" class="preview-img" alt="תמונה נוכחית" width="200" style="height: auto;">
+                } @else {
+                    <p class="no-preview-text">אין תמונה נוכחית / טוען...</p>
+                }
+                <input type="file" accept="image/*" (change)="onPhotoSelected($event)">
+                <small class="hint">בחר קובץ תמונה חדש או השאר ריק כדי לשמור את התמונה הקיימת.</small>
+            </div>
+
+            <div class="form-group file-upload-group">
+                <label>קובץ אודיו</label>
+                <p class="current-audio">
+                    **קובץ נוכחי:** {{ audioFileName || 'לא נבחר קובץ אודיו' }}
+                </p>
+                <input type="file" accept="audio/*" (change)="onAudioSelected($event)">
+                <small class="hint">בחר קובץ אודיו חדש או השאר ריק כדי לשמור את הקיים.</small>
+            </div>
+
+            <div class="actions">
+                <button type="submit" [disabled]="postForm.invalid">שמור שינויים</button>
+                <button type="button" (click)="cancel()">ביטול</button>
+            </div>
+        </form>
+    }
 </div>

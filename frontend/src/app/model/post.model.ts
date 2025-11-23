@@ -1,10 +1,12 @@
 import CategoryName from "./category.model"
 import User from "./user.model"
-import Comment from "./comment.model"
+import Comment from "./comments.model"
+import comments from "./comments.model"
+import Comments from "./comments.model"
 
 export default class Post{
     
-    id !:Number
+    id !:number
     name !: string
     description ?:string
     lyrics?: string
@@ -15,6 +17,6 @@ export default class Post{
     user!:User
     category!:CategoryName
     usersTookPart!:string
-    comments!:Comment[]
+    comments!:Comments[]
 
 }

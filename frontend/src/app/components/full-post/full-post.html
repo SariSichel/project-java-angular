@@ -42,7 +42,12 @@
         <label>comments:</label>
         @for(comment of post.comments; track $index){
           <h5>{{comment.text}}</h5>
-            <!-- stars -->
+
+          <!-- @for (i of getLoopArray(loopLimit); track i) {
+  <div>
+    דיב מספר: {{ i }}
+  </div>
+} -->
         }
 
     }

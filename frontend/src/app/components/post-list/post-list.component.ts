@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { PostsService } from '../../services/posts.service';
 import Post from '../../model/post.model';
-import Comment from '../../model/comment.model';
+import Comment from '../../model/comments.model';
 import { Router } from '@angular/router';
 
 @Component({

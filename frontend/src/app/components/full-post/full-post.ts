@@ -2,6 +2,11 @@ import { Component } from '@angular/core';
 import Post from '../../model/post.model';
 import { ActivatedRoute } from '@angular/router';
 import { PostsService } from '../../services/posts.service';
+import { CommentService } from '../../services/comment.service';
+//import Comment from "./comment.model"
+import Comment from '../../model/comments.model'; // <-- הוסף את הייבוא הזה
+import comments from '../../model/comments.model';
+import Comments from '../../model/comments.model';
 
 @Component({
   selector: 'app-full-post',
@@ -11,7 +16,7 @@ import { PostsService } from '../../services/posts.service';
 })
 export class FullPostComponent {
 
-  constructor(private route: ActivatedRoute, private postService: PostsService) { }
+  constructor(private route: ActivatedRoute, private postService: PostsService, private commentService:CommentService) { }
   //המשתנה שיוחזר מהשרת
   public post!: Post
   public audioUrl: string | null = null;
@@ -29,7 +34,16 @@ export class FullPostComponent {
 
         this.postService.getAudio(this.post.audioPath).subscribe({
           next: (audioBlob) => {
-                this.audioUrl = URL.createObjectURL(audioBlob);         
+                this.audioUrl = URL.createObjectURL(audioBlob);  
+                
+          this.commentService.getCommentsByPostId(id).subscribe({
+            next: (res)=>{
+              this.post.comments=res;
+            },
+            error:(err)=>{
+
+            }
+          })
           },
           error: (err) => {
             // טיפול בשגיאת קבלת האודיו

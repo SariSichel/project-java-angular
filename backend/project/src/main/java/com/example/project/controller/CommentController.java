@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequestMapping("api/Comment")
 @RestController
 @CrossOrigin
@@ -45,13 +47,29 @@ public class CommentController {
     //על ידי הזרקת תלויות של הפובט והתגובה...
     @PostMapping("/addComment")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Comment> addComment(@RequestBody Comment c) {
+    public ResponseEntity<Comment> addComment(@RequestBody CommentDTO c) {
         try {
-            Comment c1 = commentRepository.save(c);
+            Comment c1 = commentRepository.save(commentMapper.commentDTOtoComment(c));
             return new ResponseEntity<>(c1, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/getCommentsByPostId/{postId}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<List<CommentDTO>> getCommentsByPostId(@PathVariable Long postId){
+        try{
+            List<Comment> c=commentRepository.findComentsByPostId(postId);
+            if(c==null){
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(commentMapper.commentsToDTO(c), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 
 }

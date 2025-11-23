@@ -1,14 +1,43 @@
-<p>my-posts works!</p>
+<!-- <p>my-posts works!</p>
 
 @if(posts){
     @for(post of posts; track post.id){
         
         <h3>{{post.name}}</h3>
 
-        <img [src]="'data:image/jpeg;base64,' + post.photoPath" width="300" style="height:auto;" />
+        <img [src]="'data:image/jpeg;base64,'+post.photoPath" width="300" style="height:auto;" />
 
         <button (click)="updatePost(post.id)">update this post</button>
 
         <button (click)="goToPost(post.id)">enter to this post</button>
     }
-}
+} -->
+
+<!-- מהגמיני -->
+<div class="my-posts-container">
+    <h2>הפוסטים שלי</h2>
+
+    @if(posts && posts.length > 0) {
+        @for(post of posts; track post.id){
+            <div class="post-card">
+                <h3>{{ post.name }}</h3>
+                
+                <img 
+                    [src]="'data:image/jpeg;base64,' + post.photoPath" 
+                    alt="תמונת כריכה של הפוסט" 
+                    width="300" 
+                    style="height:auto; border-radius: 8px;" 
+                />
+
+                <div class="post-actions">
+                    <button (click)="updatePost(post.id)">עדכון פוסט</button>
+                    <button (click)="goToPost(post.id)">כניסה לפוסט</button>
+                </div>
+            </div>
+        }
+    } @else if (posts) {
+        <p class="no-posts-message">לא נמצאו פוסטים להצגה עבור משתמש זה.</p>
+    } @else {
+        <p class="loading-message">טוען פוסטים...</p>
+    }
+</div>

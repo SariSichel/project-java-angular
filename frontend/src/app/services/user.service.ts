@@ -52,26 +52,26 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 import UserSignIn from '../model/userSignIn.model';
 
 @Injectable({
-  providedIn: 'root'
+ providedIn: 'root'
 })
 export class UserService {
 
-  private apiUrl = 'http://localhost:8080/api/User'; 
+ private apiUrl = 'http://localhost:8080/api/User'; 
 
-  // 🟢 BehaviorSubject לניהול המצב
-  private _isLoggedIn = new BehaviorSubject<boolean>(false);
-  // 🟢 Observable שאליו הקומפוננטות יירשמו
-  public isLoggedIn$ = this._isLoggedIn.asObservable();
+ // 🟢 BehaviorSubject לניהול המצב
+ private _isLoggedIn = new BehaviorSubject<boolean>(false);
+ // 🟢 Observable שאליו הקומפוננטות יירשמו
+ public isLoggedIn$ = this._isLoggedIn.asObservable();
 
-  constructor(private _httpClient: HttpClient){
-    // בדיקה ראשונית של המצב כשנטען השירות
-    this.checkLoginStatus();
-  }
+ constructor(private _httpClient: HttpClient){
+  // בדיקה ראשונית של המצב כשנטען השירות
+  this.checkLoginStatus();
+ }
 
-  // פונקציה לעדכון מצב ההתחברות גלובלית
-  setLoggedIn(status: boolean): void {
-    this._isLoggedIn.next(status);
-  }
+ // פונקציה לעדכון מצב ההתחברות גלובלית
+ setLoggedIn(status: boolean): void {
+  this._isLoggedIn.next(status);
+ }
 
 
   // Sign in with username + password
@@ -120,14 +120,11 @@ export class UserService {
   );
  }
 
-
 getUserByIdFromServer(id: Number): Observable<User> {
-  //לשים ניתוב לשרת
   return this._httpClient.get<User>(`http://localhost:8080/api/User/getUserById/${id}`, { withCredentials: true });
 }
 
 updateUser(user: FormData): Observable<User> {
-  //לשים ניתוב לשרת
   return this._httpClient.put<User>(`http://localhost:8080/api/User/updateUser`, user, { withCredentials: true , responseType: 'text' as 'json'});  }
 
 }

@@ -1,167 +1,77 @@
-<!-- <div class="edit-post-container">
-
-  <h2>עריכת פוסט</h2> -->
-
-  <!-- ====== SKELETON LOADING ====== -->
-  <!-- @if (isLoading) {
-    <div class="skeleton-form">
-
-      <div class="skeleton-line title"></div>
-
-      <div class="skeleton-line"></div>
-      <div class="skeleton-line short"></div>
-
-      <div class="skeleton-block textarea"></div>
-      <div class="skeleton-block textarea tall"></div>
-
-      <div class="skeleton-line"></div>
-      <div class="skeleton-line short"></div>
-
-      <div class="skeleton-image"></div>
-
-      <div class="skeleton-line audio"></div>
-
-      <div class="skeleton-button"></div>
-      <div class="skeleton-button secondary"></div>
-    </div>
-  } -->
-
-  <!-- ====== הטופס האמיתי ====== -->
-  <!-- @else {
-    <form [formGroup]="postForm" (ngSubmit)="onSubmit()">
-
-      <div class="form-group">
-        <label>כותרת הפוסט <span class="required">*</span></label>
-        <input type="text" formControlName="name">
-      </div>
-
-      <div class="form-group">
-        <label>תיאור</label>
-        <textarea formControlName="description" rows="3"></textarea>
-      </div>
-
-      <div class="form-group">
-        <label>מילים</label>
-        <textarea formControlName="lyrics" rows="8"></textarea>
-      </div>
-
-      <div class="form-group">
-        <label>קטגוריה <span class="required">*</span></label>
-        <select formControlName="categoryId">
-          <option value="">-- בחר קטגוריה --</option>
-          @for (cat of categoriesList; track cat.id) {
-            <option [value]="cat.id">{{ cat.name }}</option>
-          }
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>תמונת כריכה</label>
-        @if (photoPreview) {
-          <img [src]="photoPreview" class="preview-img" alt="תמונה נוכחית">
+@if(post){
+    <div>
+<form #postForm="ngForm">
+    <label>post title:</label>
+    <input type="text" [(ngModel)]="post.name" name="name" minlength="2" maxlength="100" required #postnameId="ngModel">
+    @if(postnameId.errors){
+        @if(postnameId.errors['minlength']){
+            <span>your post title is too short</span>
         }
-        <input type="file" accept="image/*" (change)="onPhotoSelected($event)">
-      </div>
+        @if(postnameId.errors['maxlength']){
+            <span>your post title is too long</span>
+        }
+        @if(postnameId.errors['required']){
+            <span>you have to enter the post title</span>
+        }
+    }
+    <br><br>
 
-      <div class="form-group">
-        <label>קובץ אודיו</label>
-        <p>{{ audioFileName }}</p>
-        <input type="file" accept="audio/*" (change)="onAudioSelected($event)">
-      </div>
+    <label>post description:</label>  
+    <textarea [(ngModel)]="post.description" name="description" maxlength="500" #postdescriptionId="ngModel"></textarea>
+    @if(postdescriptionId.errors){  
+        @if(postdescriptionId.errors['maxlength']){
+            <span>your post description is too long</span>
+        }
+    }
+    <br><br>
 
-      <div class="actions">
-        <button type="submit" [disabled]="postForm.invalid">שמור שינויים</button>
-        <button type="button" (click)="cancel()">ביטול</button>
-      </div>
-    </form>
+    @if(post.lyrics){
+    <label>post lyrics:</label>  
+    <textarea [(ngModel)]="post.lyrics" name="lyrics" maxlength="2000" #postlyricsId="ngModel"></textarea>
+    @if(postlyricsId.errors){ 
+        @if(postlyricsId.errors['maxlength']){
+            <span>your post lyrics is too long</span>
+        }
+    }
   }
-</div> -->
+  <br><br>
 
-<div class="edit-post-container">
+  <label>photo file:</label>
+  <img [src]="'data:image/jpeg;base64,' + post.photoPath" width="300" style="height:auto;" />
+  <input type="file" (change)="onPhotoSelected($event)" accept="image/*" name="photo">
+  <br><br>
 
-    <h2>עריכת פוסט</h2>
+  <label>audio file:</label>
+  @if(audioUrl){
+       <audio controls [src]="audioUrl"> 
+       </audio>
+       <input type="file" (change)="onAudioSelected($event)" accept="audio/*" name="audio">
+  }
+  <br><br>
 
-    @if (isLoading) {
-        <div class="skeleton-form">
-            <div class="skeleton-line title"></div>
-            <div class="skeleton-line"></div>
-            <div class="skeleton-line short"></div>
-            <div class="skeleton-block textarea"></div>
-            <div class="skeleton-block textarea tall"></div>
-            <div class="skeleton-line"></div>
-            <div class="skeleton-line short"></div>
-            <div class="skeleton-image"></div>
-            <div class="skeleton-line audio"></div>
-            <div class="skeleton-button"></div>
-            <div class="skeleton-button secondary"></div>
-        </div>
-    }
+  <label>category:</label>
+  <select [(ngModel)]="post.category.id" name="categoryId" required #postcategoryId="ngModel">
+       <option value="">-- Select Category --</option>
+       @for(cat of categoriesList; track cat.id){
+           <option [value]="cat.id">{{cat.name}}</option>
+       }
+  </select>
+  @if(postcategoryId.errors){
+      @if(postcategoryId.errors['required']){
+          <span>you have to select a category</span>
+      }
+  }
+  <label>users took part:</label>
+  <input type="text" [(ngModel)]="post.usersTookPart" name ="usersTookPart" #postusersTookPartId="ngModel">
+  <br><br>
 
-    @if (!isLoading) {
-        <form [formGroup]="postForm" (ngSubmit)="onSubmit()">
-
-            <div class="form-group">
-                <label for="postName">כותרת הפוסט <span class="required">*</span></label>
-                <input id="postName" type="text" formControlName="name">
-                @if (postForm.get('name')?.invalid && postForm.get('name')?.touched) {
-                    <p class="error-message">אנא הזן כותרת חוקית (לפחות 2 תווים).</p>
-                }
-            </div>
-
-            <div class="form-group">
-                <label for="description">תיאור</label>
-                <textarea id="description" formControlName="description" rows="3"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="lyrics">מילים</label>
-                <textarea id="lyrics" formControlName="lyrics" rows="8"></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="usersTookPart">משתמשים נוספים שלקחו חלק</label>
-                <input id="usersTookPart" type="text" formControlName="usersTookPart">
-            </div>
-
-            <div class="form-group">
-                <label for="categoryId">קטגוריה <span class="required">*</span></label>
-                <select id="categoryId" formControlName="categoryId">
-                    <option [ngValue]="null">-- בחר קטגוריה --</option>
-                    @if (categoriesList) {
-                        @for (cat of categoriesList; track cat.id) {
-                            <option [ngValue]="cat.id">{{ cat.name }}</option>
-                        }
-                    }
-                </select>
-                @if (postForm.get('categoryId')?.invalid && postForm.get('categoryId')?.touched) {
-                    <p class="error-message">אנא בחר קטגוריה.</p>
-                }
-            </div>
-
-            <div class="form-group file-upload-group">
-                <label>תמונת כריכה</label>
-                @if (photoPreview) {
-                    <img [src]="photoPreview" class="preview-img" alt="תמונה נוכחית" width="200" style="height: auto;">
-                } @else {
-                    <p class="no-preview-text">אין תמונה נוכחית / טוען...</p>
-                }
-                <input type="file" accept="image/*" (change)="onPhotoSelected($event)">
-                <small class="hint">בחר קובץ תמונה חדש או השאר ריק כדי לשמור את התמונה הקיימת.</small>
-            </div>
-
-            <div class="form-group file-upload-group">
-                <label>קובץ אודיו</label>
-                <p class="current-audio">
-                    **קובץ נוכחי:** {{ audioFileName || 'לא נבחר קובץ אודיו' }}
-                </p>
-                <input type="file" accept="audio/*" (change)="onAudioSelected($event)">
-                <small class="hint">בחר קובץ אודיו חדש או השאר ריק כדי לשמור את הקיים.</small>
-            </div>
-
-            <div class="actions">
-                <button type="submit" [disabled]="postForm.invalid">שמור שינויים</button>
-                <button type="button" (click)="cancel()">ביטול</button>
-            </div>
-        </form>
-    }
+</form>
+<button (click)="updatePost()" [disabled]="postForm.invalid">Update Post</button>
 </div>
+}
+
+
+
+
+
+

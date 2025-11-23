@@ -31,6 +31,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.Valid;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/api/User")
 @CrossOrigin
@@ -58,15 +60,27 @@ public class UserController {
     @GetMapping("/getUserById/{userId}")
    //@PreAuthorize("@postRepository.findById(#userId).orElse(null)?.poster.userId == authentication.principal.id")
     @PreAuthorize("#userId == authentication.principal.id")
-
     public ResponseEntity<UserDTO> getUserSignUpById(@PathVariable Long userId){
         try{
             Users u=userRepository.findById(userId).orElse(null);
             if(u==null){
                 return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
             }
-            return new ResponseEntity<>(userMapper.userToDTO(u), HttpStatus.OK);
+            UserDTO userDTO = userMapper.userToDTO(u);
+
+            if(u.getPhotoPath() != null && !u.getPhotoPath().isEmpty()) {
+                try {
+                    String base64Image = PhotoUtils.getImage(u.getPhotoPath());
+                    userDTO.setPhotoPath(base64Image);
+                } catch (IOException e) {
+                    System.err.println("Failed to load user photo: " + u.getPhotoPath());
+                    e.printStackTrace();
+                }
+            }
+
+            return new ResponseEntity<>(userDTO, HttpStatus.OK);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -88,27 +102,6 @@ public class UserController {
                 .body(userDetails.getUsername());
     }
 
-//    @PostMapping("/signUp")
-//    public ResponseEntity <UserDTO> signUp(@Valid @RequestPart("photo") MultipartFile photo, @RequestPart("userSignUp") UserSignUpDTO userSignUp){
-//        Users u=userRepository.findByName(userSignUp.getName());
-//        if(u!=null)
-//            return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        try{
-//            PhotoUtils.uploadImage(photo);
-//            userSignUp.setPhotoPath((photo.getOriginalFilename()));
-//
-//            String password=userSignUp.getPassword();
-//            userSignUp.setPassword(new BCryptPasswordEncoder().encode(password));
-//
-//            Users user=userSignUpMapper.userSignUpDTOtoUser(userSignUp);
-//              user.getRoles().add(roleRepository.findById((long)1).get());
-//              userRepository.save(user);
-//               return new ResponseEntity<>(userMapper.userToDTO(user),HttpStatus.CREATED);
-//    }catch (Exception e){
-//            e.printStackTrace();
-//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
 
     @PostMapping("/signUp")
     public ResponseEntity<UserDTO> signUp(
@@ -152,13 +145,11 @@ public class UserController {
                 .body("you've been signed out!");
     }
 
-
     @PutMapping("/updateUser")
     //@PreAuthorize("hasRole('USER')")
     @PreAuthorize("hasRole('ADMIN') or #userUpdate.id == authentication.principal.id")
     public ResponseEntity<Users> updateUser(
-
-            @RequestPart("photo") MultipartFile photo,
+            @RequestPart(value = "photo", required = false) MultipartFile photo,
             @Valid @RequestPart("userUpdate") UserDTO userUpdate) {
 
         try {
@@ -168,8 +159,8 @@ public class UserController {
 
             // אם יש תמונה — שומרים
             if (photo != null && !photo.isEmpty()) {
-                PhotoUtils.uploadImage(photo);
-                u1.setPhotoPath(photo.getOriginalFilename());
+                String uniqueFileName =PhotoUtils.uploadImage(photo);
+                u1.setPhotoPath(uniqueFileName);
             }
 
             u1.setMail(userUpdate.getMail());
@@ -193,26 +184,6 @@ public class UserController {
 
         return ResponseEntity.ok(false);
     }
-
-
-//    @PostMapping("/addUser")
-//    public ResponseEntity<Users> addUser(@RequestPart("photo") MultipartFile photo, @RequestPart("post") Users u){
-//        try{
-//            PhotoUtils.uploadImage(photo);
-//            u.setPhotoPath((photo.getOriginalFilename()));
-//            Users u1=userRepository.save(u);
-//            return new ResponseEntity<>(u1, HttpStatus.CREATED);
-//            //לסדר את האודיו
-//
-//        } catch (Exception e) {
-//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//
-//    }
-
-
-
-
 
 }
 

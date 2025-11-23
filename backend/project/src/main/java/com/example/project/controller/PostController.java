@@ -179,22 +179,18 @@ public class PostController {
         }
     }
 
-    @PutMapping("/updatePostByPostId/{postId}")
-    @PreAuthorize("@postRepository.findById(#postId).orElse(null)?.poster.userId == authentication.principal.id")
-    public ResponseEntity<PostDTO> updatePostByPostId(
-          @PathVariable Long postId,
-          @RequestPart("photo") MultipartFile photo,
+    @PutMapping("/updatePost")
+    @PreAuthorize("@postRepository.findById(#p.getId()).orElse(null)?.user.id == authentication.principal.id")
+    public ResponseEntity<PostDTO> updatePost(
+          @RequestPart(value = "photo", required = false) MultipartFile photo,
           @Valid @RequestPart("post") Post p,
-          @RequestPart("audio") MultipartFile audio) {
+          @RequestPart(value = "audio", required = false) MultipartFile audio) {
         try {
-            Post p1 = postRepository.findById(postId).orElse(null);
+            Post p1 = postRepository.findById(p.getId()).orElse(null);
             if(p1 == null)
                 return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-            //צריך לשנות את התנאי הזה כי הוא אף פעם לא יתקיים- .get() לעולם לא יחזיר null — הוא או יחזיר אובייקט, או יזרוק שגיאה
-//            if (p1 == null) {
-//                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-//            }
-//            postMapper.updatePostFromPostDto(p,p1);
+
+//          postMapper.updatePostFromPostDto(p,p1);
             p1.setName(p.getName());
             p1.setDescription(p.getDescription());
             p1.setLyrics(p.getLyrics());
@@ -215,7 +211,6 @@ public class PostController {
                 p1.setPhotoPath(photoName);
             }
 
-
             // עדכון אודיו אם הועלה חדש
             if (audio != null && !audio.isEmpty()) {
                 String uniqueAudioFileName = AudioUtils.uploadAudio(audio);
@@ -226,7 +221,7 @@ public class PostController {
 
             return new ResponseEntity<>(postMapper.postToPostDTO(p1), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

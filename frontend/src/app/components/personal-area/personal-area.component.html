@@ -1,6 +1,7 @@
 @if(user){
     <div>
 <form #userForm="ngForm">
+    
     <label>user name:</label>
     <input type="text" [(ngModel)]="user.name" name="name" minlength="2" maxlength="50" required #usernameId="ngModel">
     @if(usernameId.errors){
@@ -15,6 +16,7 @@
         }
     }
     <br><br>
+
     <label>email:</label>
     <input type="mail" [(ngModel)]="user.mail" name="mail" required #emailId="ngModel">
     @if(emailId.errors){
@@ -26,9 +28,11 @@
         }
     }
     <br><br>
-             <label>photo:</label>
-              <img [src]="'data:image/jpeg;base64,' + user.photoPath" width="300" style="height:auto;" />
-        <input type="file" (change)="onPhotoSelected($event)" accept="image/*" name="photo">
+
+    <label>photo:</label>
+    <img [src]="'data:image/jpeg;base64,' + user.photoPath" width="300" style="height:auto;" />
+    <input type="file" (change)="onPhotoSelected($event)" accept="image/*" name="photo">
+
 </form>
 <button (click)="updateUser()">Update User</button>
 </div>

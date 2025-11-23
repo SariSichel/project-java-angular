@@ -18,7 +18,7 @@ import PlayList from '../../model/playList.model';
 })
 export class FullPostComponent {
  playLists!:PlayList[]
-showPlayList:boolean=false
+ showPlayList:boolean=false
  selectedPlayListId!: number 
   constructor(private route: ActivatedRoute, private postService: PostsService, private commentService:CommentService, private playListService:PlayListService) { }
   //המשתנה שיוחזר מהשרת
@@ -66,12 +66,9 @@ showPlayList:boolean=false
     }); // <-- סוגר את subscribe של ה-getPostByIdFromServer
   }); // <-- סוגר את subscribe של ה-route.params
 
-
-  
 }
   
-
-  addToPlayList(postId: number) {
+addToPlayList(postId: number) {
 this.showPlayList=!this.showPlayList;
 this.playListService.getPlayListsByUserIdFromServer(99).subscribe({
   next:(res)=>{
@@ -81,10 +78,6 @@ this.playLists=res;
   error:(err)=>{}
 })
   }
-
-
-
-
    onPlayListSelected(event: Event, postId: number) {
     const selectElement = event.target as HTMLSelectElement;
     const playListId = +selectElement.value; // המרה למספר
@@ -103,6 +96,7 @@ this.playLists=res;
     }
   }
 }
+
 function ngOnDestroy() {
   throw new Error('Function not implemented.');
 }

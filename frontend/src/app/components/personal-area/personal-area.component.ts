@@ -44,7 +44,7 @@ export class PersonalAreaComponent {
     }
 
     const userBlob = new Blob([JSON.stringify({
-      id: this.user.id,           // השתמש ב-user ישירות
+      id: this.user.id,           
       name: this.user.name,
       mail: this.user.mail,
       photoPath: this.user.photoPath
@@ -54,7 +54,7 @@ export class PersonalAreaComponent {
 
     this.userService.updateUser(formData).subscribe({
       next: (res) => {
-        alert("המשתמש עודכן בהצלחה!");
+        alert("The user updated successfully!");
       },
       error: (err) => {
         // בדוק אם הסטטוס הוא 200 למרות השגיאה

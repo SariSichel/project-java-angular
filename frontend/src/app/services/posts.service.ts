@@ -31,8 +31,8 @@ export class PostsService {
     return this._httpClient.get(`http://localhost:8080/api/Post/audio/${audioPath}`, { responseType: 'blob', withCredentials: true });
   }
 
-  update(id: number, data: FormData): Observable<any> {
-    return this._httpClient.put(`http://localhost:8080/api/Post/updatePostByPostId/${id}`, data,{withCredentials: true});
+  updatePost(data: FormData): Observable<Post> {
+    return this._httpClient.put<Post>(`http://localhost:8080/api/Post/updatePost`, data,{withCredentials: true});
   }
 
   getPostsByCategoryFromServer(categoryId:Number):Observable<Post[]>{
@@ -42,6 +42,8 @@ export class PostsService {
   getPostsByUserIdFromServer(userId:Number):Observable<Post[]>{
     return this._httpClient.get<Post[]>(`http://localhost:8080/api/Post/getPostsByUserId/${userId}`,{withCredentials: true})
   } 
+
+
 
 }
   // addPostToServer(formData: FormData): Observable<Post> {

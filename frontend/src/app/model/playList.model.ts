@@ -1,7 +1,7 @@
 import Post from "./post.model"
 
 export default class PlayList{
-    id!:Number
+    id!:number
     name!:string
     creationDate!:Date
     lastUpdated!:Date

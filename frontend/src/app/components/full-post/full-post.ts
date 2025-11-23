@@ -7,6 +7,8 @@ import { CommentService } from '../../services/comment.service';
 import Comment from '../../model/comments.model'; // <-- הוסף את הייבוא הזה
 import comments from '../../model/comments.model';
 import Comments from '../../model/comments.model';
+import { PlayListService } from '../../services/play-list.service';
+import PlayList from '../../model/playList.model';
 
 @Component({
   selector: 'app-full-post',
@@ -15,12 +17,18 @@ import Comments from '../../model/comments.model';
   styleUrl: './full-post.css',
 })
 export class FullPostComponent {
-
-  constructor(private route: ActivatedRoute, private postService: PostsService, private commentService:CommentService) { }
+ playLists!:PlayList[]
+showPlayList:boolean=false
+ selectedPlayListId!: number 
+  constructor(private route: ActivatedRoute, private postService: PostsService, private commentService:CommentService, private playListService:PlayListService) { }
   //המשתנה שיוחזר מהשרת
   public post!: Post
   public audioUrl: string | null = null;
 
+
+  getArray(n: number): number[] {
+    return Array.from({length: n}, (_, i) => i);
+  }
 
   ngOnInit(): void {
   var id: number;
@@ -58,29 +66,47 @@ export class FullPostComponent {
     }); // <-- סוגר את subscribe של ה-getPostByIdFromServer
   }); // <-- סוגר את subscribe של ה-route.params
 
-  // מומלץ לנקות את כתובת ה-URL המקומית כאשר הקומפוננטה נהרסת
-  // ngOnDestroy(): void {
-  //  if (this.audioUrl) {
-  //     URL.revokeObjectURL(this.audioUrl);
-  //   }
-  // }
+
   
 }
   
-//נשלח לפונקציה את הפוסט עצמו ונשלוף את השדות להראות
-  //   getPost(index: number): string {
-  //   return this.postsList[index].name + ": " 
-  //   + this.postsList[index].description+", "
-  //   + this.postsList[index].lyrics
-  //   + this.postsList[index].audio+", "
-  //   + this.postsList[index].uploadDate+", "
-  //   + this.postsList[index].updateDate+", "
-  //   + this.postsList[index].photoPath+", "
-  //   + this.postsList[index].user+", "
-  //   + this.postsList[index].category + ", " 
-  // }
+
+  addToPlayList(postId: number) {
+this.showPlayList=!this.showPlayList;
+this.playListService.getPlayListsByUserIdFromServer(99).subscribe({
+  next:(res)=>{
+    console.log('PlayLists for adding post:', res);
+this.playLists=res;
+  },
+  error:(err)=>{}
+})
+  }
+
+
+
+
+   onPlayListSelected(event: Event, postId: number) {
+    const selectElement = event.target as HTMLSelectElement;
+    const playListId = +selectElement.value; // המרה למספר
+    
+    if (playListId) {
+      this.playListService.addPostToPlayListOnServer(playListId, postId).subscribe({
+        next: (res) => {
+          alert('Post added to playlist successfully!');
+          this.showPlayList = false;
+        },
+        error: (err) => {
+          console.error('Error adding post to playlist:', err);
+          alert('Failed to add post to playlist');
+        }
+      });
+    }
+  }
 }
 function ngOnDestroy() {
   throw new Error('Function not implemented.');
 }
+
+
+
 

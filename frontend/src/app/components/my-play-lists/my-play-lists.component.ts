@@ -17,9 +17,10 @@ export class MyPlayListsComponent {
   ngOnInit():void{
     var id:Number;
     this.route.params.subscribe((params)=>{
-    id=params['id'];
+    id=+params['id'];
     this.playListService.getPlayListsByUserIdFromServer(id).subscribe({
       next:(res)=>{
+console.log('PlayLists received:', res);
         this.playLists=res;
       },
       error:(err)=>{
@@ -31,7 +32,8 @@ export class MyPlayListsComponent {
   }
 
 
-  goToPlayList(id: Number){
+  goToPlayList(id: number){
+     console.log('Navigating to playlist with id:', id); 
     this.router.navigate(['play-list', id]);
   }
 }

@@ -1,15 +1,21 @@
 package com.example.project.controller;
 
+import com.example.project.dto.PlayListDTO;
 import com.example.project.dto.PostDTO;
+import com.example.project.mappers.PlayListMapper;
 import com.example.project.mappers.PostMapper;
+import com.example.project.mappers.UserMapper;
 import com.example.project.model.PlayList;
 import com.example.project.model.Post;
+import com.example.project.model.Users;
 import com.example.project.service.PlayListRepository;
 import com.example.project.service.PostRepository;
+import com.example.project.service.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,12 +29,19 @@ public class PlayListController {
     private final PostMapper postMapper;
     private final PostRepository postRepository;
     private PlayListRepository playListRepository;
+    private UsersRepository usersRepository;
+    private UserMapper userMapper;
+    private PlayListMapper playListMapper;
+
 
     @Autowired
-    public PlayListController(PlayListRepository playListRepository, PostMapper postMapper, PostRepository postRepository) {
+    public PlayListController(PlayListRepository playListRepository, PostMapper postMapper, PostRepository postRepository,UsersRepository usersRepository,UserMapper userMapper,PlayListMapper playListMapper) {
         this.playListRepository = playListRepository;
         this.postMapper = postMapper;
         this.postRepository = postRepository;
+        this.usersRepository=usersRepository;
+        this.userMapper=userMapper;
+        this.playListMapper=playListMapper;
     }
 
     @GetMapping("/getPlayListById/{playListId}")
@@ -45,14 +58,16 @@ public class PlayListController {
         }
     }
 
-    //להוסיף פונקציה שמחזירה את כל הפלייליסטים לפי יוזר ID
-
     @PostMapping("/addPlayList")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<PlayList> addPlayList(@RequestBody PlayList p) {
+    public ResponseEntity<PlayList> addPlayList(@RequestBody PlayListDTO p, Authentication authentication) {
         try {
-            PlayList c = playListRepository.save(p);
-            return new ResponseEntity<>(c, HttpStatus.CREATED);
+            Users user = usersRepository.findByName(authentication.getName());
+
+            p.setUserDTO(userMapper.userToDTO(user));
+
+            PlayList p1 = playListRepository.save(playListMapper.PlayListDTOtoPlayList(p));
+            return new ResponseEntity<>(p1, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -60,7 +75,6 @@ public class PlayListController {
 
     @GetMapping("/getPlayListsByUserId/{id}")
     @PreAuthorize("hasRole('USER')")
-
     public ResponseEntity<List<PlayList>> getPlayListsByUserId(@PathVariable Long id){
         try{
             List<PlayList> l=playListRepository.findPlayListsByUserId(id);
@@ -73,22 +87,9 @@ public class PlayListController {
         }
     }
 
-//    @GetMapping("/getPostsByPlayListId/{playListId}")
-//    @PreAuthorize("hasRole('USER')")
-//    public ResponseEntity<List<PostDTO>> getPostsByPlayListId(@PathVariable Long playListId){
-//        try{
-//            List<Post> p=playListRepository.findByPlayListId(playListId);
-//            if(p==null){
-//                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-//            }
-//            return new ResponseEntity<>(postMapper.postsToDTO(p), HttpStatus.OK);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
-@GetMapping("/getPostsByPlayListId/{playListId}")
-@PreAuthorize("hasRole('USER')")
-public ResponseEntity<List<PostDTO>> getPostsByPlayListId(@PathVariable Long playListId){
+    @GetMapping("/getPostsByPlayListId/{playListId}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<List<PostDTO>> getPostsByPlayListId(@PathVariable Long playListId){
     try{
         Optional<PlayList> playList = playListRepository.findById(playListId);
         if(playList.isEmpty()){
@@ -101,8 +102,8 @@ public ResponseEntity<List<PostDTO>> getPostsByPlayListId(@PathVariable Long pla
     }
 }
 
-@PostMapping("/addPostToPlayList/{playListId}/{postId}")
-@PreAuthorize("hasRole('USER')")
+    @PostMapping("/addPostToPlayList/{playListId}/{postId}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<PlayList>addPostToPlayList(@PathVariable Long playListId, @PathVariable Long postId){
         try{
             PlayList p=playListRepository.findPlayListById(playListId);
@@ -120,7 +121,6 @@ public ResponseEntity<List<PostDTO>> getPostsByPlayListId(@PathVariable Long pla
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 }
-
 
 
 }

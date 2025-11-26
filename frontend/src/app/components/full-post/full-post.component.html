@@ -9,11 +9,20 @@
 
         @for(p of playLists; track p.id){
           <option [value]="p.id">{{p.id}}</option>
-                
-
         }
+
+      <button (click)="newPlayList()">new playList</button>
+
+      <div display="newPlayListClicked">
+        <form (ngSubmit)="createPlayList()" #playListForm="ngForm">
+          <label for="name">PlayList Name:</label>
+          <input type="text" id="name" required [(ngModel)]="newPlayListName" name="name" #name="ngModel">
+          <button type="submit"  (click)="add()"[disabled]="!playListForm.form.valid">create</button>
+        </form>
+      </div>
+
       </select>
-            <br><br>
+      <br><br>
 
       }
         <label>photo:</label>

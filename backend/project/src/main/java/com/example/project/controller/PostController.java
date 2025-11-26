@@ -53,7 +53,6 @@ public class PostController {
         this.aiChatService=aiChatService;
     }
 
-
     @GetMapping("/getPostById/{postId}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<PostDTO> getPostById(@PathVariable long postId) {
@@ -230,4 +229,11 @@ public class PostController {
         return aiChatService.getResponse(chatRequest.message(), chatRequest.conversationId());
     }
 
+//    @PostMapping("/chat")
+//    public String getResponse(@RequestBody ChatRequest chatRequest){
+//        return aiChatService.getResponse(chatRequest.message(), chatRequest.conversationId());
+//    }
+
 }
+
+

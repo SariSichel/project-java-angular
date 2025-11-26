@@ -1,22 +1,23 @@
 import { Component } from '@angular/core';
-import Post from '../../model/post.model';
-import { ActivatedRoute } from '@angular/router';
+import PlayList from '../../model/playList.model';
 import { PostsService } from '../../services/posts.service';
 import { CommentService } from '../../services/comment.service';
-//import Comment from "./comment.model"
-import Comment from '../../model/comments.model'; // <-- הוסף את הייבוא הזה
-import comments from '../../model/comments.model';
-import Comments from '../../model/comments.model';
 import { PlayListService } from '../../services/play-list.service';
-import PlayList from '../../model/playList.model';
+import { ActivatedRoute } from '@angular/router';
+import Post from '../../model/post.model';
+
 
 @Component({
   selector: 'app-full-post',
   imports: [],
-  templateUrl: './full-post.html',
-  styleUrl: './full-post.css',
+  templateUrl: './full-post.component.html',
+  styleUrl: './full-post.component.css'
 })
+
+
+
 export class FullPostComponent {
+
  playLists!:PlayList[]
  showPlayList:boolean=false
  selectedPlayListId!: number 
@@ -24,7 +25,8 @@ export class FullPostComponent {
   //המשתנה שיוחזר מהשרת
   public post!: Post
   public audioUrl: string | null = null;
-
+  public newPlayListClicked=false;
+  public playList:PlayList={id:0,name:'',creationDate:new Date(),lastUpdated:new Date(),user:{id:99,name:'',mail:'',photoPath:''}};
 
   getArray(n: number): number[] {
     return Array.from({length: n}, (_, i) => i);
@@ -95,11 +97,34 @@ this.playLists=res;
       });
     }
   }
+newPlayList() {
+  this.newPlayListClicked=true;
+}
+
+add(){
+    const formData = new FormData();
+    formData.append("playList", new Blob([JSON.stringify({name:this.playList.name,
+                                                      creationDate:this.playList.creationDate
+                                                      ,lastUpdated:this.playList.lastUpdated,
+                                                      user:this.playList.user
+                                                    })]));
+    this.playListService.addPlayListOnServer(this.playList).subscribe({
+      next: (res) => {
+        alert("PlayList created successfully!");  
+      },
+      error: (err) => {
+        console.error(err);
+        alert("Failed to create PlayList");
+      }
+    });
+}
+
 }
 
 function ngOnDestroy() {
   throw new Error('Function not implemented.');
 }
+
 
 
 

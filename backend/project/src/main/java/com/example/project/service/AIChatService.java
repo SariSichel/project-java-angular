@@ -16,17 +16,20 @@ import java.util.List;
 public class AIChatService {
     private final ChatClient chatClient;
     private final ChatMemory chatMemory;
-    private final static String SYSYEM_INSTRUCTION= """
+    private final static String SYSYEM_INSTRUCTION = """
             אתה עוזר AI לעינייני היסטוריה של שירים וזמרים
             """;
 
     public AIChatService(ChatClient.Builder chatClient, ChatMemory chatMemory) {
         this.chatClient = chatClient.build();
-        this.chatMemory=chatMemory;
+        this.chatMemory = chatMemory;
 
     }
 
     public String getResponse(String prompt,String conversationId){
+        if (conversationId == null || conversationId.isEmpty()) {
+            conversationId = "default";
+        }
         List<Message> messageList=new ArrayList<>();
     //ההודעה הראשונה - ההנחיה הראשונית
        messageList.add(new SystemMessage(SYSYEM_INSTRUCTION));
@@ -51,3 +54,4 @@ public class AIChatService {
 }
 
 }
+

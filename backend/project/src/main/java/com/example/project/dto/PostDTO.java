@@ -31,6 +31,18 @@ public class PostDTO {
     private String usersTookPart;
     private List<CommentDTO> comments;
 
+    private Double averageRating;
+
+    // ... getters and setters הקיימים ...
+
+    public Double getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(Double averageRating) {
+        this.averageRating = averageRating;
+    }
+
     public int getId() {
         return id;
     }

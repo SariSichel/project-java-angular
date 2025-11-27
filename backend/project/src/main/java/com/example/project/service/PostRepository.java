@@ -58,4 +58,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     // חיפוש משולב - או בשם או במילים
     List<Post> findByNameContainingIgnoreCaseOrLyricsContainingIgnoreCase(
             String nameKeyword, String lyricsKeyword);
+
+    // הוסף את המתודה הזו ב-PostRepository
+//    List<Post> findAllByOrderByAverageRatingDesc();
 }

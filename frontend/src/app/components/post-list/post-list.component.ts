@@ -98,4 +98,14 @@ export class PostListComponent {
   seeFullPost(id: Number) {
     this.router.navigate(['full-post', id])
   }
+
+    getStars(rating: number): string {
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+    
+    return '⭐'.repeat(fullStars) + 
+           (hasHalfStar ? '✨' : '') + 
+           '☆'.repeat(emptyStars);
+  }
 }

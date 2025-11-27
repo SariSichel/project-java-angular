@@ -246,6 +246,7 @@ import com.example.project.mappers.CategoryMapper;
 import com.example.project.mappers.CommentMapper;
 import com.example.project.mappers.PostMapper;
 import com.example.project.mappers.UserMapper;
+import com.example.project.model.Comment;
 import com.example.project.model.Post;
 import com.example.project.service.AIChatService;
 import com.example.project.service.AudioUtils;
@@ -330,18 +331,40 @@ public class PostController {
             return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+//
+//    @GetMapping("/getPosts")
+//    public ResponseEntity<List<PostDTO>> getPosts() {
+//        try {
+//            List<Post> p = postRepository.findAll();
+//            List<PostDTO> p1 = postMapper.postsToDTO(p);
+//            return new ResponseEntity<>(p1, HttpStatus.OK);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
     @GetMapping("/getPosts")
     public ResponseEntity<List<PostDTO>> getPosts() {
         try {
-            List<Post> p = postRepository.findAll();
-            List<PostDTO> p1 = postMapper.postsToDTO(p);
-            return new ResponseEntity<>(p1, HttpStatus.OK);
+            // 1. שלוף את כל הפוסטים מהDB (ללא מיון)
+            List<Post> posts = postRepository.findAll();
+
+            // 2. המר ל-DTO (כולל חישוב averageRating ב-Mapper)
+            List<PostDTO> postDTOs = postMapper.postsToDTO(posts);
+
+            // 3. מיין את ה-DTOs לפי דירוג ממוצע (גבוה לנמוך)
+            postDTOs.sort((p1, p2) -> {
+                double rating1 = p1.getAverageRating() != null ? p1.getAverageRating() : 0.0;
+                double rating2 = p2.getAverageRating() != null ? p2.getAverageRating() : 0.0;
+                return Double.compare(rating2, rating1); // מיון יורד
+            });
+
+            return new ResponseEntity<>(postDTOs, HttpStatus.OK);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     @PostMapping("/addPost")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Post> addPost(

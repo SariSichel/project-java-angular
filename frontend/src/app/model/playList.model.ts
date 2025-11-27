@@ -7,5 +7,6 @@ export default class PlayList{
     creationDate!:Date
     lastUpdated!:Date
     user!:User
+    //  posts?: Post[] 
 }
 

@@ -43,7 +43,14 @@ export class PostsService {
     return this._httpClient.get<Post[]>(`http://localhost:8080/api/Post/getPostsByUserId/${userId}`,{withCredentials: true})
   } 
 
+// ⭐ הוסף את זה בסוף הקובץ:
 
+searchPosts(keyword: string): Observable<Post[]> {
+  return this._httpClient.get<Post[]>(
+    `http://localhost:8080/api/Post/search?keyword=${keyword}`,
+    { withCredentials: true }
+  );
+}
 
 }
   // addPostToServer(formData: FormData): Observable<Post> {

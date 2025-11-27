@@ -1,4 +1,4 @@
-<p>post-list works!</p>
+<!-- <p>post-list works!</p>
 
 @if (postsList) {
 @for (post of postsList; track post.id) {
@@ -6,10 +6,56 @@
 
 <img [src]="'data:image/jpeg;base64,' + post.photoPath" width="300" style="height:auto;" />
 
-<!-- אם אפשר לעשות ככה צריך למחוק את היוזר ניים -->
+
 <h2>{{post.user.name}}</h2>
-<!-- כפתור של כניסה לפוסט -->
+
   <button (click)="seeFullPost(post.id)">see full post</button>
 
 }
-}
+} -->
+<!-- ⭐ תיבת חיפוש חדשה -->
+<div class="search-container">
+  <div class="search-box">
+    <input 
+      type="text" 
+      [(ngModel)]="searchKeyword"
+      (keyup.enter)="onSearch()"
+      placeholder="🔍 Search songs by name or lyrics..."
+      class="search-input"
+    />
+    <button (click)="onSearch()" class="search-btn" [disabled]="isSearching">
+      {{ isSearching ? 'Searching...' : 'Search' }}
+    </button>
+    <button 
+      *ngIf="searchKeyword" 
+      (click)="clearSearch()" 
+      class="clear-btn"
+    >
+      ✕
+    </button>
+  </div>
+</div>
+
+<!-- ⭐ הודעה אם אין תוצאות -->
+<div *ngIf="postsList && postsList.length === 0" class="no-results">
+  <p>No songs found for "{{ searchKeyword }}"</p>
+</div>
+
+<!-- ⭐ רשימת הפוסטים -->
+<div class="posts-grid">
+  @if (postsList) {
+    @for (post of postsList; track post.id) {
+      <div class="post-card">
+        <img [src]="'data:image/jpeg;base64,' + post.photoPath" class="post-image" />
+        
+        <div class="post-content">
+          <h3>{{ post.name }}</h3>
+          <h4>by {{ post.user.name }}</h4>
+          <button (click)="seeFullPost(post.id)" class="see-post-btn">
+            See Full Post
+          </button>
+        </div>
+      </div>
+    }
+  }
+</div>

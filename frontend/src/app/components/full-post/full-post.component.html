@@ -8,18 +8,13 @@
         <option value="">-- Select PlayList --</option>
 
         @for(p of playLists; track p.id){
-          <option [value]="p.id">{{p.id}}</option>
+          <option [value]="p.id">{{p.name}}</option>
         }
 
-      <button (click)="newPlayList()">new playList</button>
-
-      <div display="newPlayListClicked">
-        <form (ngSubmit)="createPlayList()" #playListForm="ngForm">
-          <label for="name">PlayList Name:</label>
-          <input type="text" id="name" required [(ngModel)]="newPlayListName" name="name" #name="ngModel">
-          <button type="submit"  (click)="add()"[disabled]="!playListForm.form.valid">create</button>
-        </form>
-      </div>
+      <!-- <button (click)="newPlayList()">new playList</button> -->
+       <!-- אופציה ליצירת פלייליסט חדש -->
+            <option value="new">+ Create New PlayList</option>
+      
 
       </select>
       <br><br>
@@ -55,17 +50,9 @@
     @if(!audioUrl){
         <span>... Audio Loading ...</span>
     }
-        <!-- <label>audio:</label>
-    <audio controls [src]="audioUrl" crossorigin="anonymous"></audio> -->
-        <!-- <label>audio:</label>
-        <audio controls [src]="'http://localhost:8080/api/Post/audio/' + post.audioPath" crossorigin="use-credentials"></audio> -->
-<!-- <audio controls>
-  <source [src]="'http://localhost:8080/api/Post/audio/' + post.audioPath" type="audio/mpeg">
-  Your browser does not support the audio element.
-</audio> -->
+
         <label>comments:</label>
         @for(comment of post.comments; track $index){
-          <!-- <h5>{{comment.userName.mail}}</h5> -->
           <h5>{{comment.text}}</h5>
   @for (item of getArray(this.post.comments[$index].rating); track $index) {
   <div style="background-color: yellow; border-radius: 50%;">{{$index}}</div>
@@ -74,3 +61,27 @@
 
     }
 </div>
+
+@if(newPlayListClicked){
+
+  <div>
+    <form #newPlayList="ngForm" >
+      <label>play list Name:</label>
+      <input type="text" [(ngModel)]="playList.name" name="name" minlength="2" maxlength="50" required #nameId="ngModel">
+      @if(nameId.errors){
+        @if(nameId.errors['minlength']){
+          <span>your play list name is too short</span>
+        }
+        @if(nameId.errors['maxlength']){
+          <span>your play list name is too long</span>
+        }
+        @if(nameId.errors['required']){
+          <span>you have to enter the play list name</span>
+        }
+      }
+      <br><br>
+      <button (click)="add()">add play list</button>
+    </form>
+  </div>
+}
+    

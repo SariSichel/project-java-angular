@@ -23,8 +23,14 @@ addPostToPlayListOnServer(playListId:Number, postId:Number):Observable<PlayList>
   return this._httpClient.post<PlayList>(`http://localhost:8080/api/PlayList/addPostToPlayList/${playListId}/${postId}`,{}, {withCredentials: true, responseType: 'text' as 'json'})
 }
 
-addPlayListOnServer(playList:PlayList):Observable<PlayList>{
-  return this._httpClient.post<PlayList>(`http://localhost:8080/api/PlayList/addPlayList`,playList, {withCredentials: true, responseType: 'text' as 'json'})
+// addPlayListOnServer(playList:PlayList):Observable<PlayList>{
+//   return this._httpClient.post<PlayList>(`http://localhost:8080/api/PlayList/addPlayList`,playList, {withCredentials: true})
+// }
+addPlayListOnServer(playList: any): Observable<PlayList> {
+  return this._httpClient.post<PlayList>(
+    `http://localhost:8080/api/PlayList/addPlayList`,
+    playList,
+    { withCredentials: true }
+  );
 }
-
 }

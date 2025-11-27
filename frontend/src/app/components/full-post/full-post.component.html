@@ -1,98 +1,4 @@
-<!-- <div>
-
-    @if(post){
-      <button (click)="addToPlayList(post.id)">add to playList</button>
-      <br><br>
-
-      @if(showPlayList){
-          <select (change)="onPlayListSelected($event, post.id)">
-        <option value="">-- Select PlayList --</option>
-
-        @for(p of playLists; track p.id){
-          <option [value]="p.id">{{p.name}}</option>
-        }
-
-            <option value="new">+ Create New PlayList</option>
-      
-
-      </select>
-      <br><br>
-      }
-
-        <label>photo:</label>
-        <img [src]="'data:image/jpeg;base64,' + post.photoPath" width="300" style="height:auto;" />
-        <label>name:</label>
-        <span>{{post.name}}</span>
-        <br><br>
-
-        <label>description:</label>
-        <span>{{post.description}}</span>
-        <br><br>
-
-        <label>lyrics:</label>
-        <h5>{{post.lyrics}}</h5>
-        <br><br>
-
-        <label>update date:</label>
-        <span>{{post.updateDate}}</span>
-        <label>upload date:</label>
-        <span>{{post.uploadDate}}</span>
-        <br><br>
-
-        <label>category:</label>
-        <span>{{post.category.name}}</span>
-        <br><br>
-
-        <label>users took part:</label>
-        <span>{{post.usersTookPart}}</span>
-        <br><br>
-
-        <label>audio:</label>
-    @if(audioUrl){ 
-        <audio controls [src]="audioUrl"></audio> 
-    }
-    
-    @if(!audioUrl){
-        <span>... Audio Loading ...</span>
-    } 
-        <br><br>
-
-        <label>comments:</label>
-        @for(comment of post.comments; track $index){
-          <h5>{{comment.text}}</h5>
-        @for (item of getArray(this.post.comments[$index].rating); track $index) {
-       <div style="background-color: yellow; border-radius: 50%;">{{$index}}</div>
-        }
-           }
-
-      <button (click)="addComment(post.id)">add comment</button>
-    }
-</div>
-@if(newPlayListClicked){
-
-  <div>
-    <form #newPlayList="ngForm" >
-      <label>play list Name:</label>
-      <input type="text" [(ngModel)]="playList.name" name="name" minlength="2" maxlength="50" required #nameId="ngModel">
-      @if(nameId.errors){
-        @if(nameId.errors['minlength']){
-          <span>your play list name is too short</span>
-        }
-        @if(nameId.errors['maxlength']){
-          <span>your play list name is too long</span>
-        }
-        @if(nameId.errors['required']){
-          <span>you have to enter the play list name</span>
-        }
-      }
-      <br><br>
-      <button (click)="add()">add play list</button>
-    </form>
-  </div>
-}
-     -->
-
-     <div>
+    <div>
 
     @if(post){
       <button (click)="addToPlayList(post.id)">add to playList</button>
@@ -174,7 +80,7 @@
         }
       }
       <br><br>
-      <button (click)="add()">add play list</button>
+      <button (click)="addPlayList()">add play list</button>
     </form>
   </div>
 }

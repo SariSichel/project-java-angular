@@ -196,7 +196,7 @@ newPlayList() {
 // }
 // בקובץ full-post.component.ts - פונקציה מתוקנת
 
-add() {
+addPlayList() {
   // בדיקה שהשם לא ריק
   if (!this.playList.name || this.playList.name.trim() === '') {
     alert("Please enter a playlist name");

@@ -1,4 +1,4 @@
-<p>add-comment works!</p>
+<!-- <p>add-comment works!</p>
 <div>
     <form #CommentForm="ngForm">
 
@@ -32,4 +32,46 @@
         }
 
     </form>
-    <button (click)="addComment()" [disabled]="CommentForm.invalid">Add Comment</button>
+    <button (click)="addComment()" [disabled]="CommentForm.invalid">Add Comment</button> -->
+
+    <p>add-comment works!</p>
+<div>
+    <form #CommentForm="ngForm">
+
+        <label>comment text:</label>
+        <input type="text" [(ngModel)]="newComment.text" name="text" minlength="2" maxlength="300" required #textId="ngModel">
+        @if(textId.errors){
+            @if(textId.errors['minlength']){
+                <span>your comment is too short</span>
+            }
+            @if(textId.errors['maxlength']){
+                <span>your comment is too long</span>
+            }
+            @if(textId.errors['required']){
+                <span>you have to enter the comment text</span>
+            }
+        }
+        <br><br>
+        
+        <label>rating</label>
+        <div class="star-rating">
+            @for(star of [1,2,3,4,5]; track star){
+                <span 
+                    class="star" 
+                    [class.filled]="star <= newComment.rating"
+                    (click)="setRating(star)"
+                    (mouseenter)="hoverRating = star"
+                    (mouseleave)="hoverRating = 0"
+                    [class.hovered]="star <= hoverRating">
+                    ★
+                </span>
+            }
+        </div>
+        <input type="hidden" [(ngModel)]="newComment.rating" name="rating" required>
+        @if(newComment.rating === 0){
+            <span class="error">you have to select a rating</span>
+        }
+
+    </form>
+    <button (click)="addComment()" [disabled]="CommentForm.invalid || newComment.rating === 0">Add Comment</button>
+</div>

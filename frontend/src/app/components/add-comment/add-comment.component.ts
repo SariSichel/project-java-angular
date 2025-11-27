@@ -24,25 +24,45 @@ constructor(private route: ActivatedRoute,private commentService:CommentService)
     postId: 0 
   };
 
-  addComment() {
-    var id: number;
-    this.route.params.subscribe((params) => {
-    id = params['id'];
-    this.newComment.postId=id;});
-    const formData = new FormData();
+  // addComment() {
+  //   var id: number;
+  //   this.route.params.subscribe((params) => {
+  //   id = params['id'];
+  //   this.newComment.postId=id;});
 
-    const commentBlob = new Blob([JSON.stringify(this.newComment)], { type: 'application/json' });
-    formData.append("comment", commentBlob);
-    // שליחה לשרת
-    // כאן יש להוסיף את הקוד לשליחת ה-FormData לשרת באמצעות שירות מתאים
-    this.commentService.addCommentToServer(formData).subscribe({
-      next: (res) => {
-        alert("Comment added successfully!");
-      },
-      error: (err) => {
-        console.error(err);   
-        alert("Failed to add comment");
-      }
-    });
-  }
+  //   const formData = new FormData();
+
+  //   const commentBlob = new Blob([JSON.stringify(this.newComment)], { type: 'application/json' });
+  //   formData.append("comment", commentBlob);
+  //   // שליחה לשרת
+  //   // כאן יש להוסיף את הקוד לשליחת ה-FormData לשרת באמצעות שירות מתאים
+  //   this.commentService.addCommentToServer(formData).subscribe({
+  //     next: (res) => {
+  //       alert("Comment added successfully!");
+  //     },
+  //     error: (err) => {
+  //       console.error(err);   
+  //       alert("Failed to add comment");
+  //     }
+  //   });
+  // }
+
+  addComment() {
+  var id: number;
+  this.route.params.subscribe((params) => {
+    id = params['id'];
+    this.newComment.postId = id;
+  });
+
+  // שלח את אובייקט התגובה ישירות כ-JSON
+  this.commentService.addCommentToServer(this.newComment).subscribe({
+    next: (res) => {
+      alert("Comment added successfully!");
+    },
+    error: (err) => {
+      console.error(err);   
+      alert("Failed to add comment");
+    }
+  });
+}
   }

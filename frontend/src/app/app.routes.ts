@@ -11,6 +11,7 @@ import { MyPlayListsComponent } from './components/my-play-lists/my-play-lists.c
 import { UpdatePostComponent } from './components/update-post/update-post.component';
 import { MyPostsComponent } from './components/my-posts/my-posts.component';
 import { FullPostComponent } from './components/full-post/full-post.component';
+import { AddCommentComponent } from './components/add-comment/add-comment.component';
 
 
 export const routes: Routes = [
@@ -25,6 +26,6 @@ export const routes: Routes = [
     {path: "play-list/:id", component:PlayListComponent},
     {path:"my-play-lists/:id", component:MyPlayListsComponent},
     {path:"update-post/:id", component:UpdatePostComponent},
-    {path:"my-posts/:id", component:MyPostsComponent}
-
+    {path:"my-posts/:id", component:MyPostsComponent},
+    {path:"add-comment/:id", component:AddCommentComponent}
 ];

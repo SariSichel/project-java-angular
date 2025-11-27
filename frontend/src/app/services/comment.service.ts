@@ -14,7 +14,14 @@ export class CommentService {
     return this._httpClient.get<Comments[]>(`http://localhost:8080/api/Comment/getCommentsByPostId/${id}`, {withCredentials: true})
   }
 
-  addCommentToServer(formData:FormData):Observable<Comment>{
-    return this._httpClient.post<Comment>(`http://localhost:8080/api/Comment/addComment`, formData, {withCredentials: true});
-  }
+  // addCommentToServer(formData:FormData):Observable<Comment>{
+  //   return this._httpClient.post<Comment>(`http://localhost:8080/api/Comment/addComment`, formData, {withCredentials: true});
+  // }
+  addCommentToServer(comment: Comments): Observable<Comment> {
+  return this._httpClient.post<Comment>(
+    `http://localhost:8080/api/Comment/addComment`, 
+    comment, 
+    {withCredentials: true}
+  );
+}
 }

@@ -58,21 +58,6 @@ public class PlayListController {
         }
     }
 
-//    @PostMapping("/addPlayList")
-//    @PreAuthorize("hasRole('USER')")
-//    public ResponseEntity<PlayList> addPlayList(@RequestBody PlayListDTO p, Authentication authentication) {
-//        try {
-//            Users user = usersRepository.findByName(authentication.getName());
-//
-//            p.setUserDTO(userMapper.userToDTO(user));
-//
-//            PlayList p1 = playListRepository.save(playListMapper.PlayListDTOtoPlayList(p));
-//            return new ResponseEntity<>(p1, HttpStatus.CREATED);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
-
     @PostMapping("/addPlayList")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<PlayList> addPlayList(@RequestBody PlayListDTO p, Authentication authentication) {

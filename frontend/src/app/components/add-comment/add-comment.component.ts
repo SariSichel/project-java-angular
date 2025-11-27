@@ -1,65 +1,48 @@
-// import { Component, EventEmitter, Output } from '@angular/core';
-// import { FormsModule, NgForm } from '@angular/forms';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
+import { CommentService } from '../../services/comment.service';
+import Comments from '../../model/comments.model';
+import { ActivatedRoute } from '@angular/router';
 
-// @Component({
-//   selector: 'app-add-comment',
-//   imports: [FormsModule],
-//   templateUrl: './add-comment.component.html',
-//   styleUrl: './add-comment.component.css'
-// })
-// export class AddCommentComponent {
+@Component({
+  selector: 'app-add-comment',
+  imports: [FormsModule],
+  templateUrl: './add-comment.component.html',
+  styleUrl: './add-comment.component.css'
+})
+export class AddCommentComponent {
 
-//   public newComment: Comment = {
-//     id:-1,                    // יקבל ערך בשרת או באופן מקומי
-//     text: "",
-//     rating: undefined,
-//     updateDate: new Date(),
-//     //צריך לתפוס יוזר מהלוקאל סטוראג
-//     userName: {               // כאן תצטרך להזין את המשתמש הנוכחי (לדוגמה מה-service)
-//       id: 1,
-//       name: 'משתמש לדוגמה',
-//       mail: 'user@example.com',
-//       photoPath: "לקחת את התמונה של המשתמש הנוכחי"
-//     } 
-//   };
+constructor(private route: ActivatedRoute,private commentService:CommentService) { }
 
-//   // אם אתה רוצה לשלוח את הקומנט החוצה להורה
-//   @Output() commentAdded = new EventEmitter<Comment>();
+  public newComment: Comments = {
+    id: 0,                   
+    text: "",
+    rating: 1,
+    updateDate: new Date(),
+    //צריך לתפוס יוזר מהלוקאל סטוראג
+    user: {id: 99,name: "",mail: "",photoPath: ""},
+    postId: 0 
+  };
 
-//   // הפונקציה שמופעלת בלחיצה על הכפתור
-//   addComment(form: NgForm): void {
-//     // בדיקה שהטופס תקין
-//     if (form.invalid) {
-//       // מסמן את כל השדות כ-nouched כדי שההודעות שגיאה יופיעו
-//       form.form.markAllAsTouched();
-//       return;
-//     }
+  addComment() {
+    var id: number;
+    this.route.params.subscribe((params) => {
+    id = params['id'];
+    this.newComment.postId=id;});
+    const formData = new FormData();
 
-//     // יצירת אובייקט חדש נקי (אפשר גם לשכפל את newComment)
-//     const commentToAdd: Comment = {
-//       ...this.newComment,
-//       updateDate: new Date(),
-//       // אם אתה רוצה id אוטומטי מקומי (לדוגמה):
-//       // id: Date.now()
-//     };
-
-//     // שולחים את הקומנט להורה דרך EventEmitter
-//     this.commentAdded.emit(commentToAdd);
-
-//     // מאפסים את הטופס
-//     this.resetForm(form);
-//   }
-
-//   // איפוס הטופס והמודל
-//   private resetForm(form: NgForm): void {
-//     form.resetForm();
-//     this.newComment = {
-//       id: 0,
-//       text: '',
-//       rating: undefined,
-//       updateDate: new Date(),
-//       userName: this.newComment.userName // שומר את המשתמש הנוכחי
-//     };
-//   }
-
-// }
+    const commentBlob = new Blob([JSON.stringify(this.newComment)], { type: 'application/json' });
+    formData.append("comment", commentBlob);
+    // שליחה לשרת
+    // כאן יש להוסיף את הקוד לשליחת ה-FormData לשרת באמצעות שירות מתאים
+    this.commentService.addCommentToServer(formData).subscribe({
+      next: (res) => {
+        alert("Comment added successfully!");
+      },
+      error: (err) => {
+        console.error(err);   
+        alert("Failed to add comment");
+      }
+    });
+  }
+  }

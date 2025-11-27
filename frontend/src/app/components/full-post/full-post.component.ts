@@ -3,9 +3,8 @@ import PlayList from '../../model/playList.model';
 import { PostsService } from '../../services/posts.service';
 import { CommentService } from '../../services/comment.service';
 import { PlayListService } from '../../services/play-list.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import Post from '../../model/post.model';
-
 
 @Component({
   selector: 'app-full-post',
@@ -14,14 +13,13 @@ import Post from '../../model/post.model';
   styleUrl: './full-post.component.css'
 })
 
-
-
 export class FullPostComponent {
 
  playLists!:PlayList[]
  showPlayList:boolean=false
  selectedPlayListId!: number 
-  constructor(private route: ActivatedRoute, private postService: PostsService, private commentService:CommentService, private playListService:PlayListService) { }
+ 
+  constructor(private route: ActivatedRoute, private postService: PostsService, private commentService:CommentService, private playListService:PlayListService, private router:Router) { }
   //המשתנה שיוחזר מהשרת
   public post!: Post
   public audioUrl: string | null = null;
@@ -119,8 +117,11 @@ add(){
     });
 }
 
+addComment(id:number) {
+  this.router.navigate(['add-comment', id]);
 }
 
+}
 function ngOnDestroy() {
   throw new Error('Function not implemented.');
 }

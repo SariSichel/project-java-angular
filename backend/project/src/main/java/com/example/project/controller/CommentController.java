@@ -3,7 +3,9 @@ package com.example.project.controller;
 import com.example.project.dto.CommentDTO;
 import com.example.project.mappers.CommentMapper;
 import com.example.project.model.Comment;
+import com.example.project.model.Post;
 import com.example.project.service.CommentRepository;
+import com.example.project.service.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +21,13 @@ public class CommentController {
 
     private CommentRepository commentRepository;
     private CommentMapper commentMapper;
+    private PostRepository postRepository;
 
     @Autowired
-    public CommentController(CommentRepository commentRepository, CommentMapper commentMapper) {
+    public CommentController(CommentRepository commentRepository, CommentMapper commentMapper,PostRepository postRepository) {
         this.commentRepository = commentRepository;
         this.commentMapper = commentMapper;
+        this.postRepository=postRepository;
     }
 
    // @GetMapping("/getCommentsByPostId/{postId}")
@@ -49,8 +53,19 @@ public class CommentController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Comment> addComment(@RequestBody CommentDTO c) {
         try {
-            Comment c1 = commentRepository.save(commentMapper.commentDTOtoComment(c));
-            return new ResponseEntity<>(c1, HttpStatus.CREATED);
+            Comment c1 = commentMapper.commentDTOtoComment(c);
+
+            Post post = postRepository.findById(c.getPostId()).orElse(null);;
+
+            if (post==null){
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            }
+
+            c1.setPost(post);
+
+            Comment saveComment=commentRepository.save(c1);
+
+            return new ResponseEntity<>(saveComment, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

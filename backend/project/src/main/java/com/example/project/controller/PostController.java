@@ -57,7 +57,7 @@ public class PostController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<PostDTO> getPostById(@PathVariable long postId) {
         try {
-            Post p = postRepository.findById(postId).get();
+            Post p = postRepository.findById(postId).orElse(null);;
             if (p == null) {
                 return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
             }

@@ -3,6 +3,7 @@
     @if(post){
       <button (click)="addToPlayList(post.id)">add to playList</button>
       <br><br>
+
       @if(showPlayList){
           <select (change)="onPlayListSelected($event, post.id)">
         <option value="">-- Select PlayList --</option>
@@ -23,30 +24,36 @@
 
       </select>
       <br><br>
-
       }
+
         <label>photo:</label>
         <img [src]="'data:image/jpeg;base64,' + post.photoPath" width="300" style="height:auto;" />
         <label>name:</label>
         <span>{{post.name}}</span>
         <br><br>
+
         <label>description:</label>
         <span>{{post.description}}</span>
         <br><br>
+
         <label>lyrics:</label>
         <h5>{{post.lyrics}}</h5>
         <br><br>
+
         <label>update date:</label>
         <span>{{post.updateDate}}</span>
         <label>upload date:</label>
         <span>{{post.uploadDate}}</span>
         <br><br>
+
         <label>category:</label>
         <span>{{post.category.name}}</span>
         <br><br>
+
         <label>users took part:</label>
         <span>{{post.usersTookPart}}</span>
         <br><br>
+
         <label>audio:</label>
     @if(audioUrl){ 
         <audio controls [src]="audioUrl"></audio> 
@@ -54,8 +61,27 @@
     
     @if(!audioUrl){
         <span>... Audio Loading ...</span>
-    }
-        <!-- <label>audio:</label>
+    } 
+
+        <label>comments:</label>
+        @for(comment of post.comments; track $index){
+          <!-- <h5>{{comment.userName.mail}}</h5> -->
+          <h5>{{comment.text}}</h5>
+
+       @for (item of getArray(this.post.comments[$index].rating); track $index) {
+       <div style="background-color: yellow; border-radius: 50%;">{{$index}}</div>
+        }
+        }
+        <br><br>
+
+        <button (click)="addComment(post.id)">add comment</button>
+
+    } 
+</div>
+
+
+
+     <!-- <label>audio:</label>
     <audio controls [src]="audioUrl" crossorigin="anonymous"></audio> -->
         <!-- <label>audio:</label>
         <audio controls [src]="'http://localhost:8080/api/Post/audio/' + post.audioPath" crossorigin="use-credentials"></audio> -->
@@ -63,14 +89,3 @@
   <source [src]="'http://localhost:8080/api/Post/audio/' + post.audioPath" type="audio/mpeg">
   Your browser does not support the audio element.
 </audio> -->
-        <label>comments:</label>
-        @for(comment of post.comments; track $index){
-          <!-- <h5>{{comment.userName.mail}}</h5> -->
-          <h5>{{comment.text}}</h5>
-  @for (item of getArray(this.post.comments[$index].rating); track $index) {
-  <div style="background-color: yellow; border-radius: 50%;">{{$index}}</div>
-}
-        }
-
-    }
-</div>

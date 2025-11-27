@@ -3,8 +3,8 @@ import User from "./user.model"
 export default class Comments{
     id!:Number
     text?:string
-    rating!:number
+    rating?:number
     updateDate!:Date
-    userName!:User
+    user!:User
     postId!:Number
 }

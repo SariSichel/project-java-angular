@@ -1,6 +1,6 @@
 <p>add-comment works!</p>
 <div>
-    <form #CommentForm="ngForm" (ngSubmit)="addComment(CommentForm)">
+    <form #CommentForm="ngForm">
 
         <label>comment text:</label>
         <input type="text" [(ngModel)]="newComment.text" name="text" minlength="2" maxlength="300" required #textId="ngModel">
@@ -16,6 +16,7 @@
             }
         }
         <br><br>
+        
         <label>rating</label>
         <input type="number" [(ngModel)]="newComment.rating" name="rating" min="1" max="5" required #ratingId="ngModel">
         @if(ratingId.errors){       

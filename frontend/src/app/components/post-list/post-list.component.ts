@@ -27,8 +27,6 @@ constructor(private _postService: PostsService, private router:Router){}
     })
   }
 
-
-
     //לעבור לעמוד של פוסט מסויים עם מזהה
   seeFullPost(id:Number){
     this.router.navigate(['full-post', id]);

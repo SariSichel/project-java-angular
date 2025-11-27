@@ -58,17 +58,43 @@ public class PlayListController {
         }
     }
 
+//    @PostMapping("/addPlayList")
+//    @PreAuthorize("hasRole('USER')")
+//    public ResponseEntity<PlayList> addPlayList(@RequestBody PlayListDTO p, Authentication authentication) {
+//        try {
+//            Users user = usersRepository.findByName(authentication.getName());
+//
+//            p.setUserDTO(userMapper.userToDTO(user));
+//
+//            PlayList p1 = playListRepository.save(playListMapper.PlayListDTOtoPlayList(p));
+//            return new ResponseEntity<>(p1, HttpStatus.CREATED);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
+
     @PostMapping("/addPlayList")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<PlayList> addPlayList(@RequestBody PlayListDTO p, Authentication authentication) {
         try {
+            // בדיקה אם authentication קיים
+            if (authentication == null || authentication.getName() == null) {
+                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            }
+
             Users user = usersRepository.findByName(authentication.getName());
+
+            // בדיקה אם המשתמש נמצא
+            if (user == null) {
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            }
 
             p.setUserDTO(userMapper.userToDTO(user));
 
             PlayList p1 = playListRepository.save(playListMapper.PlayListDTOtoPlayList(p));
             return new ResponseEntity<>(p1, HttpStatus.CREATED);
         } catch (Exception e) {
+            e.printStackTrace(); // הדפס את השגיאה לקונסול
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

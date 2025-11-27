@@ -9,10 +9,8 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring" )
-
+@Mapper(componentModel = "spring")
 public interface PlayListMapper {
-
 
     PlayListDTO playListToDTO(PlayList p);
     List<PlayListDTO> PlayListsToDTO(List<PlayList> lp);

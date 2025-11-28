@@ -85,23 +85,16 @@ this.playLists=res;
   error:(err)=>{}
 })
   }
-  //  onPlayListSelected(event: Event, postId: number) {
-  //   const selectElement = event.target as HTMLSelectElement;
-  //   const playListId = +selectElement.value; // המרה למספר
-    
-  //   if (playListId) {
-  //     this.playListService.addPostToPlayListOnServer(playListId, postId).subscribe({
-  //       next: (res) => {
-  //         alert('Post added to playlist successfully!');
-  //         this.showPlayList = false;
-  //       },
-  //       error: (err) => {
-  //         console.error('Error adding post to playlist:', err);
-  //         alert('Failed to add post to playlist');
-  //       }
-  //     });
-  //   }
-  // }
+
+  // פונקציה חדשה לבדיקה אם פוסט כבר קיים בפלייליסט
+isPostInPlayList(playListId: number, postId: number): boolean {
+  const playList = this.playLists.find(p => p.id === playListId);
+  if (playList && playList.posts) {
+    return playList.posts.some(post => post.id === postId);
+  }
+  return false;
+}
+
   onPlayListSelected(event: Event, postId: number) {
   const selectElement = event.target as HTMLSelectElement;
   const playListId = selectElement.value;
@@ -114,10 +107,20 @@ this.playLists=res;
   
   // המרה למספר רק אם זה לא "new" ולא ריק
   if (playListId && playListId !== '') {
+
+    // בדיקה אם הפוסט כבר קיים בפלייליסט
+    //משום מה הבדיקה לא עובדת או שהפונקציה לא עובדת- יש לבדוק את זה
+      if (this.isPostInPlayList(+playListId, postId)) {
+      alert('This post already exists in the selected playlist!');
+      selectElement.value = ''; // אפס את הבחירה
+      return;
+    }
+
     this.playListService.addPostToPlayListOnServer(+playListId, postId).subscribe({
       next: (res) => {
         alert('Post added to playlist successfully!');
         this.showPlayList = false;
+        selectElement.value = ''; // אפס את הבחירה
       },
       error: (err) => {
         console.error('Error adding post to playlist:', err);
@@ -127,74 +130,10 @@ this.playLists=res;
   }
 }
 
-// אפשר למחוק את הפונקציה הזו כי לא צריך אותה יותר
-// newPlayList() {
-//   this.newPlayListClicked=true;
-// }
 newPlayList() {
   this.newPlayListClicked=true;
 }
 
-// add(){
-//     const formData = new FormData();
-//     formData.append("playList", new Blob([JSON.stringify({name:this.playList.name,
-//                                                       creationDate:this.playList.creationDate
-//                                                       ,lastUpdated:this.playList.lastUpdated,
-//                                                       user:this.playList.user
-//                                                     })]));
-//     this.playListService.addPlayListOnServer(this.playList).subscribe({
-//       next: (res) => {
-//         alert("PlayList created successfully!");  
-//       },
-//       error: (err) => {
-//         console.error(err);
-//         alert("Failed to create PlayList");
-//       }
-//     });
-// }
-
-// add(){
-//   // אין צורך ב-FormData, שלח את האובייקט ישירות
-//   this.playListService.addPlayListOnServer(this.playList).subscribe({
-//     next: (res) => {
-//       alert("PlayList created successfully!");
-//       this.newPlayListClicked = false;
-//       this.showPlayList = false;
-//       // אופציונלי: הוסף את הפלייליסט החדש לרשימה
-//       this.playLists.push(res);
-//     },
-//     error: (err) => {
-//       console.error(err);
-//       alert("Failed to create PlayList");
-//     }
-//   });
-// }
-
-// add() {
-//   // הכן את האובייקט עם הנתונים הנדרשים בלבד
-//   const newPlayList = {
-//     name: this.playList.name,
-//     creationDate: new Date().toISOString(),
-//     lastUpdated: new Date().toISOString()
-//     // אל תשלח את user - השרת ימלא אותו אוטומטית מה-Authentication
-//   };
-  
-//   this.playListService.addPlayListOnServer(newPlayList).subscribe({
-//     next: (res) => {
-//       alert("PlayList created successfully!");
-//       this.newPlayListClicked = false;
-//       this.showPlayList = false;
-//       // הוסף את הפלייליסט החדש לרשימה
-//       this.playLists.push(res);
-//     },
-//     error: (err) => {
-//       console.error('Error details:', err);
-//       alert("Failed to create PlayList: " + (err.error?.message || err.message));
-//     }
-//   });
-// }
-// }
-// בקובץ full-post.component.ts - פונקציה מתוקנת
 
 addPlayList() {
   // בדיקה שהשם לא ריק

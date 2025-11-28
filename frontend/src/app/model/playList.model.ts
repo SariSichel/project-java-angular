@@ -7,6 +7,7 @@ export default class PlayList{
     creationDate!:Date
     lastUpdated!:Date
     user!:User
-    //  posts?: Post[] 
+    // הוספתי את המאפיין posts למודל PlayList לצורך בדיקה אם פוסט קיים בפלייליסט
+     posts?: Post[] 
 }
 

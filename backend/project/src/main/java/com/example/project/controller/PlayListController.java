@@ -148,6 +148,12 @@ public class PlayListController {
             if(p1==null){
                 return new ResponseEntity(null, HttpStatus.NOT_FOUND);
             }
+
+            //בדיקה אם הפוסט כבר קיים בפלייליסט, אם כן זורק שגיאת 409
+            if (p.getPosts().contains(p1)) {
+                return new ResponseEntity<>(null, HttpStatus.CONFLICT); // 409
+            }
+
             p.getPosts().add(p1);
             playListRepository.save(p);
             return new ResponseEntity(p, HttpStatus.OK);

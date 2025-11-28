@@ -11,25 +11,50 @@ import { PlayListService } from '../../services/play-list.service';
   styleUrl: './play-list.component.css'
 })
 export class PlayListComponent {
-public posts!:Post[];
-  constructor(private route:ActivatedRoute, private postService:PostsService, private router:Router, private playListService:PlayListService) {}
+
+  public posts!:Post[];
+  public postIdToDelete: number | null = null; // שמירת ה-ID של הפוסט שמיועד למחיקה
+  public playListId:number=0;
+
+  constructor(private route:ActivatedRoute, private postService:PostsService, private router:Router,private playListService:PlayListService) {}
 
   ngOnInit() {
-    var id:number;
-     this.route.params.subscribe((params)=>{
-      id=params['id'];
-this.playListService.getPostsByPlayListIdFromServer(id).subscribe({
-  next:(res)=>{
-      this.posts=res;
-  },
-  error:(err)=>{
+    
+    this.route.params.subscribe((params)=>{
+    this.playListId= +params['id'];
 
-  }
-})
+  this.postService.getPostsByPlayListIdFromServer(this.playListId).subscribe({
+      next:(res)=>{
+        this.posts=res;
+     },
+      error:(err)=>{
+    }
+    });
      })
   }
 
+  deletePost(postId: number): void {
+    this.postIdToDelete = postId; // שמירת ה-ID של הפוסט שרוצים למחוק
+  }
 
+  cancelDelete(): void {
+    this.postIdToDelete = null; // ביטול המחיקה
+  }
+
+  okDeletePost(postId: number): void {
+    this.playListService.removePostFromPlayListOnServer(this.playListId,postId).subscribe({
+      next: (res) => {  
+        alert("Post deleted successfully!");
+        this.postIdToDelete = null; // איפוס לאחר מחיקה מוצלחת
+        this.posts = this.posts.filter(p => p.id !== postId); // רענון הרשימה לאחר המחיקה
+      },
+      error: (err) => {
+        console.error("Failed to delete post:", err); 
+        alert("Failed to delete post");
+        this.postIdToDelete = null;
+      } 
+    });
+  }
       //לעבור לעמוד של פוסט מסויים עם מזהה
   seeFullPost(id:Number){
     this.router.navigate(['full-post', id]);

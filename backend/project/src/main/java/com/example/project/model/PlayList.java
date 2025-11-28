@@ -1,5 +1,6 @@
 package com.example.project.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -9,19 +10,26 @@ import java.util.List;
 public class PlayList {
     @Id
     @GeneratedValue
-    private int id;
+    private Long id;
     private String name;
     private LocalDate creationDate;
     private LocalDate lastUpdated;
 
     @ManyToOne
+    @JsonIgnore
     private Users user;
 
-    //??
     @ManyToMany
+    //שינוי שנעשה עבור מחיקת פוסט
+    @JoinTable(
+            name = "play_list_posts",
+            joinColumns = @JoinColumn(name = "play_list_id"),
+            inverseJoinColumns = @JoinColumn(name = "posts_id")
+    )
+    @JsonIgnore
     private List<Post> posts;
 
-    public PlayList(int platListId, String playListName, LocalDate creationDate, LocalDate lastUpdated, Users user, List<Post> posts) {
+    public PlayList(Long platListId, String playListName, LocalDate creationDate, LocalDate lastUpdated, Users user, List<Post> posts) {
         this.id = platListId;
         this.name = playListName;
         this.creationDate = creationDate;
@@ -34,20 +42,20 @@ public class PlayList {
 
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int platListId) {
-        this.id = platListId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getPlayListName() {
+    public String getName() {
         return name;
     }
 
-    public void setPlayListName(String playListName) {
-        this.name = playListName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public LocalDate getCreationDate() {

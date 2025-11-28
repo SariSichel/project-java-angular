@@ -1,5 +1,6 @@
 package com.example.project.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import javax.validation.constraints.Max;
@@ -35,9 +36,14 @@ public class Post {
    @ManyToOne
    private Category category;
 
-   @OneToMany(mappedBy = "post")
+   @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+   @JsonIgnore
    private List<Comment> comments;
 
+   //הופסתי את זה לצורך מחיקת פוסט כדי שימחק אוטומטית את הקשר עם פלייליסט
+    @ManyToMany(mappedBy = "posts", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JsonIgnore
+    private List<PlayList> playLists;
 
     public Post(Long Id, String Name, String description, String lyrics, LocalDate uploadDate, LocalDate updateDate, Users user, Category category, String usersTookPart, List<Comment> comments, PlayList playList, String audioPath, String photoPath) {
         this.id = Id;
@@ -154,4 +160,11 @@ public class Post {
         this.photoPath = photoPath;
     }
 
+    public List<PlayList> getPlayLists() {
+        return playLists;
+    }
+
+    public void setPlayLists(List<PlayList> playLists) {
+        this.playLists = playLists;
+    }
 }

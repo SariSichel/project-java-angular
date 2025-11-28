@@ -1,9 +1,18 @@
 <p>my-play-lists works!</p>
 @if(playLists){
     @for(playList of playLists; track playList.id){
+
         <h3>{{playList.name}}</h3>
-        <h3>{{playList.creationDate}}</h3>
 
         <button (click)="goToPlayList(playList.id)">enter to this play list</button>
+        <button (click)="deletePlayList(playList.id)">delete PlayList</button>
+                    
+        @if(PlayListIdToDelete === playList.id){
+           <div class="confirm-delete">
+                <p>are you sure you want to delete this post?</p>
+                <button (click)="okDeletePost(playList.id)">yes</button>
+                <button (click)="cancelDelete()">no</button>
+    </div>
+    }                    
     }
 }

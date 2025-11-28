@@ -247,11 +247,9 @@ import com.example.project.mappers.CommentMapper;
 import com.example.project.mappers.PostMapper;
 import com.example.project.mappers.UserMapper;
 import com.example.project.model.Comment;
+import com.example.project.model.PlayList;
 import com.example.project.model.Post;
-import com.example.project.service.AIChatService;
-import com.example.project.service.AudioUtils;
-import com.example.project.service.PhotoUtils;
-import com.example.project.service.PostRepository;
+import com.example.project.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -260,12 +258,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 
 import java.io.IOException;
+import java.nio.file.attribute.UserPrincipal;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/Post")
@@ -278,16 +280,20 @@ public class PostController {
     CategoryMapper categoryMapper;
     CommentMapper commentMapper;
     private AIChatService aiChatService;
+    private CommentRepository commentRepository;
+    private PlayListRepository playListRepository;
 
 
     @Autowired
-    public PostController(PostRepository postRepository, PostMapper postMapper, UserMapper userMapper, CategoryMapper categoryMapper, CommentMapper commentMapper,AIChatService aiChatService) {
+    public PostController(PostRepository postRepository, PostMapper postMapper, UserMapper userMapper, CategoryMapper categoryMapper, CommentMapper commentMapper,AIChatService aiChatService,CommentRepository commentRepository,PlayListRepository playListRepository) {
         this.postRepository = postRepository;
         this.postMapper = postMapper;
         this.userMapper = userMapper;
         this.categoryMapper = categoryMapper;
         this.commentMapper = commentMapper;
         this.aiChatService=aiChatService;
+        this.commentRepository=commentRepository;
+        this.playListRepository=playListRepository;
     }
 
     @GetMapping("/getPostById/{postId}")
@@ -331,17 +337,21 @@ public class PostController {
             return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-//
-//    @GetMapping("/getPosts")
-//    public ResponseEntity<List<PostDTO>> getPosts() {
-//        try {
-//            List<Post> p = postRepository.findAll();
-//            List<PostDTO> p1 = postMapper.postsToDTO(p);
-//            return new ResponseEntity<>(p1, HttpStatus.OK);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
+
+    @GetMapping("/getPostsByPlayListId/{playListId}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<List<PostDTO>> getPostsByPlayListId(@PathVariable Long playListId){
+        try{
+            Optional<PlayList> playList = playListRepository.findById(playListId);
+            if(playList.isEmpty()){
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            }
+            List<Post> posts = playList.get().getPosts();
+            return new ResponseEntity<>(postMapper.postsToDTO(posts), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @GetMapping("/getPosts")
     public ResponseEntity<List<PostDTO>> getPosts() {
@@ -365,6 +375,7 @@ public class PostController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @PostMapping("/addPost")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Post> addPost(
@@ -407,18 +418,92 @@ public class PostController {
     }
 
     @DeleteMapping("/deletePostById/{postId}")
-    @PreAuthorize("hasRole('ADMIN') or @postRepository.findById(#postId).orElse(null)?.poster.userId == authentication.principal.id")
-    public ResponseEntity deletePostById(@PathVariable Long postId) {
+    @Transactional
+    public ResponseEntity deletePostById(@PathVariable Long postId, Authentication authentication) {
         try {
-            if (postRepository.existsPostById(postId)) {
-                postRepository.deletePostById(postId);
-                return new ResponseEntity(HttpStatus.NO_CONTENT);
+            Optional<Post> postOpt = postRepository.findById(postId);
+
+            if (!postOpt.isPresent()) {
+                return new ResponseEntity(HttpStatus.NOT_FOUND);
             }
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+
+            Post post = postOpt.get();
+
+            // בדיקת הרשאות
+            boolean isAdmin = authentication.getAuthorities().stream()
+                    .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
+
+            String currentUsername = authentication.getName();
+            boolean isOwner = post.getUser().getName().equals(currentUsername);
+
+            if (!isAdmin && !isOwner) {
+                return new ResponseEntity(HttpStatus.FORBIDDEN);
+            }
+
+            // מצא את כל הפלייליסטים והסר את הפוסט מהם
+            List<PlayList> allPlayLists = playListRepository.findAll();
+            for (PlayList playList : allPlayLists) {
+                if (playList.getPosts() != null && playList.getPosts().contains(post)) {
+                    playList.getPosts().remove(post);
+                    playListRepository.save(playList);
+                }
+            }
+
+            // מחק את הפוסט (התגובות יימחקו אוטומטית)
+            postRepository.deleteById(postId);
+
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @DeleteMapping("/removePostFromPlayList/{playListId}/{postId}")
+    @Transactional
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity removePostFromPlayList(
+            @PathVariable Long playListId,
+            @PathVariable Long postId,
+            Authentication authentication) {
+
+        try {
+            // שליפת הפלייליסט
+            Optional<PlayList> playListOpt = playListRepository.findById(playListId);
+            if (playListOpt.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            PlayList playList = playListOpt.get();
+
+            String currentUsername = authentication.getName();
+            boolean isOwner = playList.getUser().getName().equals(currentUsername);
+
+            if (!isOwner) {
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            }
+
+            // שליפת הפוסט
+            Optional<Post> postOpt = postRepository.findById(postId);
+            if (postOpt.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            Post post = postOpt.get();
+
+            // הסרת הפוסט מהפלייליסט
+            if (playList.getPosts() != null && playList.getPosts().contains(post)) {
+                playList.getPosts().remove(post);
+                playListRepository.save(playList);
+            }
+
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
     @PutMapping("/updatePost")
     @PreAuthorize("@postRepository.findById(#p.getId()).orElse(null)?.user.id == authentication.principal.id")

@@ -15,10 +15,6 @@ getPlayListsByUserIdFromServer(id:Number):Observable<PlayList[]>{
   return this._httpClient.get<PlayList[]>(`http://localhost:8080/api/PlayList/getPlayListsByUserId/${id}` , {withCredentials: true})
 }
 
-getPostsByPlayListIdFromServer(id:Number):Observable<Post[]>{
-  return this._httpClient.get<Post[]>(`http://localhost:8080/api/PlayList/getPostsByPlayListId/${id}` , {withCredentials: true})
-}
-
 addPostToPlayListOnServer(playListId:Number, postId:Number):Observable<PlayList>{
   return this._httpClient.post<PlayList>(`http://localhost:8080/api/PlayList/addPostToPlayList/${playListId}/${postId}`,{}, {withCredentials: true, responseType: 'text' as 'json'})
 }
@@ -32,5 +28,13 @@ addPlayListOnServer(playList: any): Observable<PlayList> {
     playList,
     { withCredentials: true }
   );
+}
+
+removePostFromPlayListOnServer(playListId:Number, postId:Number):Observable<any>{
+  return this._httpClient.delete<any>(`http://localhost:8080/api/Post/removePostFromPlayList/${playListId}/${postId}`,{withCredentials: true})  
+}
+
+deletePlayListFromServer(playListId:number):Observable<any>{
+  return this._httpClient.delete<any>(`http://localhost:8080/api/PlayList/deletePlaylistById/${playListId}`,{withCredentials: true})  
 }
 }

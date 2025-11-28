@@ -40,8 +40,8 @@ import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    public boolean existsPostById (Long id);
-    public void deletePostById(Long id);
+    public boolean existsById (Long id);
+    public void deleteById(Long id);
     public List<Post> findPostsByUserId(Long id);
     List<Post> findByCategory_Id(Long categoryId);
     public Post findPlayListById(Long postId);

@@ -43,6 +43,14 @@ export class PostsService {
     return this._httpClient.get<Post[]>(`http://localhost:8080/api/Post/getPostsByUserId/${userId}`,{withCredentials: true})
   } 
 
+  getPostsByPlayListIdFromServer(playListId:Number):Observable<Post[]>{
+    return this._httpClient.get<Post[]>(`http://localhost:8080/api/Post/getPostsByPlayListId/${playListId}` , {withCredentials: true})
+  }
+
+  deletePostFromServer(postId:number):Observable<any>{
+    return this._httpClient.delete<any>(`http://localhost:8080/api/Post/deletePostById/${postId}`,{withCredentials: true})
+  }
+
 // ⭐ הוסף את זה בסוף הקובץ:
 
 searchPosts(keyword: string): Observable<Post[]> {

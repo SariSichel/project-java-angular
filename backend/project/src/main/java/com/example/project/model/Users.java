@@ -1,4 +1,5 @@
 package com.example.project.model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -19,15 +20,19 @@ public class Users {
     private String photoPath;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Post> uploadPosts;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Comment> comments;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<PlayList> playlists;
 
     @ManyToMany
+    @JsonIgnore
     private Set<Role> roles=new HashSet<>();
 
     public Users(Long userId, String userName, String mail, String password, List<Post> uploadPosts, List<Comment> comments, List<PlayList> playlists, List<Post> postsTookPart, String photo) {

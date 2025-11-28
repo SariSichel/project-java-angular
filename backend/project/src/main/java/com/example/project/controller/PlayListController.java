@@ -16,8 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,28 +60,64 @@ public class PlayListController {
         }
     }
 
+//    @PostMapping("/addPlayList")
+//    @PreAuthorize("hasRole('USER')")
+//    public ResponseEntity<PlayList> addPlayList(@RequestBody PlayListDTO p, Authentication authentication) {
+//        try {
+//            // בדיקה אם authentication קיים
+//            if (authentication == null || authentication.getName() == null) {
+//                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+//            }
+//
+//            Users user = usersRepository.findByName(authentication.getName());
+//
+//            // בדיקה אם המשתמש נמצא
+//            if (user == null) {
+//                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+//            }
+//
+//            p.setUserDTO(userMapper.userToDTO(user));
+//
+//            PlayList p1 = playListRepository.save(playListMapper.PlayListDTOtoPlayList(p));
+//            return new ResponseEntity<>(p1, HttpStatus.CREATED);
+//        } catch (Exception e) {
+//            e.printStackTrace(); // הדפס את השגיאה לקונסול
+//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
+
     @PostMapping("/addPlayList")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<PlayList> addPlayList(@RequestBody PlayListDTO p, Authentication authentication) {
         try {
-            // בדיקה אם authentication קיים
             if (authentication == null || authentication.getName() == null) {
                 return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
             }
 
             Users user = usersRepository.findByName(authentication.getName());
 
-            // בדיקה אם המשתמש נמצא
             if (user == null) {
                 return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
             }
 
-            p.setUserDTO(userMapper.userToDTO(user));
+            // צור PlayList חדש במקום להשתמש ב-Mapper
+            PlayList playList = new PlayList();
+            playList.setName(p.getName());
+            playList.setUser(user);
 
-            PlayList p1 = playListRepository.save(playListMapper.PlayListDTOtoPlayList(p));
-            return new ResponseEntity<>(p1, HttpStatus.CREATED);
+            // הגדר תאריכים
+            LocalDate now = LocalDate.now();
+            playList.setCreationDate(now);
+            playList.setLastUpdated(now);
+
+            // שמור
+            PlayList savedPlayList = playListRepository.save(playList);
+
+            return new ResponseEntity<>(savedPlayList, HttpStatus.CREATED);
+
         } catch (Exception e) {
-            e.printStackTrace(); // הדפס את השגיאה לקונסול
+            e.printStackTrace();
+            System.err.println("Error details: " + e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -97,21 +135,6 @@ public class PlayListController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    @GetMapping("/getPostsByPlayListId/{playListId}")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<List<PostDTO>> getPostsByPlayListId(@PathVariable Long playListId){
-    try{
-        Optional<PlayList> playList = playListRepository.findById(playListId);
-        if(playList.isEmpty()){
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
-        List<Post> posts = playList.get().getPosts();
-        return new ResponseEntity<>(postMapper.postsToDTO(posts), HttpStatus.OK);
-    } catch (Exception e) {
-        return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-}
 
     @PostMapping("/addPostToPlayList/{playListId}/{postId}")
     @PreAuthorize("hasRole('USER')")
@@ -133,5 +156,41 @@ public class PlayListController {
         }
 }
 
+    @DeleteMapping("/deletePlaylistById/{playlistId}")
+    @Transactional
+    public ResponseEntity deletePlaylistById(@PathVariable Long playlistId, Authentication authentication) {
+        try {
+            Optional<PlayList> playlistOpt = playListRepository.findById(playlistId);
 
-}
+            if (!playlistOpt.isPresent()) {
+                return new ResponseEntity(HttpStatus.NOT_FOUND);
+            }
+
+            PlayList playlist = playlistOpt.get();
+
+            String currentUsername = authentication.getName();
+            boolean isOwner = playlist.getUser().getName().equals(currentUsername);
+
+            if (!isOwner) {
+                return new ResponseEntity(HttpStatus.FORBIDDEN);
+            }
+
+            // נקה את הקשרים עם הפוסטים לפני המחיקה
+            if (playlist.getPosts() != null) {
+                playlist.getPosts().clear();
+                playListRepository.save(playlist);
+            }
+
+            playListRepository.deleteById(playlistId);
+
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    }
+
+
+

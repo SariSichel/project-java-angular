@@ -61,4 +61,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     // הוסף את המתודה הזו ב-PostRepository
 //    List<Post> findAllByOrderByAverageRatingDesc();
+
+
 }

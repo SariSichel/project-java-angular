@@ -61,7 +61,7 @@ export class PostListComponent {
     this._postService.getPostsFromServer().subscribe({
       next: (res) => {
         this.postsList = res
-        this.allPosts = res // ⭐ שמור עותק של כל הפוסטים
+        // this.allPosts = res // ⭐ שמור עותק של כל הפוסטים
       },
       error: (err) => {
         console.error(err)
@@ -108,4 +108,41 @@ export class PostListComponent {
            (hasHalfStar ? '✨' : '') + 
            '☆'.repeat(emptyStars);
   }
+
+  sortByRating(): void {
+    this._postService.getPostsSortedByRating().subscribe({
+      next: (res) => {
+                console.log("sort by rating");
+
+        this.postsList = res
+      },
+      error: (err) => {
+        console.error(err)
+      }
+    })
+  }
+
+  sortByDate(): void {
+this._postService.getPostsSortedByDate().subscribe({
+      next: (res) => {
+        console.log("sort by date");
+        
+        this.postsList = res
+      },
+      error: (err) => {
+        console.error(err)
+      }
+    })
+  }
+
+  onSortChange(event: Event): void {
+  const selectElement = event.target as HTMLSelectElement;
+  const sortType = selectElement.value;
+  
+  if (sortType === 'rating') {
+    this.sortByRating();
+  } else if (sortType === 'date') {
+    this.sortByDate();
+  }
+}
 }

@@ -17,7 +17,7 @@ export class PostsService {
 
   //פונקציה שמחזירה את כל הפוסטים מהשרת
   getPostsFromServer():Observable<Post[]>{
-    return this._httpClient.get<Post[]>(`http://localhost:8080/api/Post/getPosts`)
+    return this._httpClient.get<Post[]>(`http://localhost:8080/api/Post/getPosts`,{withCredentials: true})
   }
   addPostToServer(formData: FormData): Observable<Post> {
     return this._httpClient.post<Post>(`http://localhost:8080/api/Post/addPost`, formData, {withCredentials: true});
@@ -51,46 +51,29 @@ export class PostsService {
     return this._httpClient.delete<any>(`http://localhost:8080/api/Post/deletePostById/${postId}`,{withCredentials: true})
   }
 
-// ⭐ הוסף את זה בסוף הקובץ:
 
-searchPosts(keyword: string): Observable<Post[]> {
-  return this._httpClient.get<Post[]>(
-    `http://localhost:8080/api/Post/search?keyword=${keyword}`,
-    { withCredentials: true }
-  );
+  searchPosts(keyword: string): Observable<Post[]> {
+    return this._httpClient.get<Post[]>(
+      `http://localhost:8080/api/Post/search?keyword=${keyword}`,
+      { withCredentials: true }
+    );
+  }
+
+getPostsSortedByRating(): Observable<Post[]> {
+    return this._httpClient.get<Post[]>(
+      `http://localhost:8080/api/Post/getPostsSortedByRating`,
+      { withCredentials: true }
+    );
+  }
+  getPostsSortedByDate(): Observable<Post[]> {
+    return this._httpClient.get<Post[]>(
+      `http://localhost:8080/api/Post/getPostsSortedByDate`,
+      { withCredentials: true }
+    );
+  }
+
 }
 
-}
-  // addPostToServer(formData: FormData): Observable<Post> {
-  //   // שולח עם cookies ל־JWT
-  //   return this._httpClient.post<Post>(
-  //     'http://localhost:8080/api/Post/addPost',
-  //     formData,
-  //     { withCredentials: true }
-  //   );
-  // }
-
-// addPostToServer(formData: FormData): Observable<Post> {
-//   const headers = new HttpHeaders({
-//     'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
-//   });
-//   return this._httpClient.post<Post>(`http://localhost:8080/api/Post/addPost`, formData, { headers, withCredentials: true });
-// }
-
-
-
-
-//   addPostToServer(formData: FormData): Observable<Post> {
-//   const headers = new HttpHeaders({
-//     'Authorization': `Bearer ${this.authService.getToken()}` // מקבלים את הטוקן מהשירות שלך
-//   });
-
-//   return this._httpClient.post<Post>(
-//     `http://localhost:8080/api/Post/addPost`,
-//     formData,
-//     { headers, withCredentials: true }
-//   );
-// }
 
 
 

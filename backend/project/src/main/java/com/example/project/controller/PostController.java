@@ -266,6 +266,7 @@ import javax.validation.Valid;
 
 import java.io.IOException;
 import java.nio.file.attribute.UserPrincipal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -352,9 +353,43 @@ public class PostController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+@GetMapping("/getPosts")
+public ResponseEntity<List<PostDTO>> getPosts(){
+        try{
+            List<Post> l=postRepository.findAll();
+            List<PostDTO> ld=postMapper.postsToDTO(l);
+            if(ld==null){
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(ld, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+}
 
-    @GetMapping("/getPosts")
-    public ResponseEntity<List<PostDTO>> getPosts() {
+@GetMapping("/getPostsSortedByDate")
+public ResponseEntity<List<PostDTO>> getPostsSortedByDate(){
+        try{
+            List<Post> l=postRepository.findAll();
+            List<PostDTO> ld=postMapper.postsToDTO(l);
+            ld.sort((p1, p2) -> {
+                LocalDate date1 = p1.getUploadDate();
+                LocalDate date2 = p2.getUploadDate();
+
+                // טיפול במקרה של null
+                if (date1 == null && date2 == null) return 0;
+                if (date1 == null) return 1;  // null בסוף
+                if (date2 == null) return -1;
+
+                return date2.compareTo(date1); // מיון יורד (החדש ביותר ראשון)
+            });
+            return new ResponseEntity<>(ld, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+}
+    @GetMapping("/getPostsSortedByRating")
+    public ResponseEntity<List<PostDTO>> getPostsSortedByRating() {
         try {
             // 1. שלוף את כל הפוסטים מהDB (ללא מיון)
             List<Post> posts = postRepository.findAll();

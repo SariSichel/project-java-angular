@@ -1,18 +1,4 @@
-<!-- <p>post-list works!</p>
 
-@if (postsList) {
-@for (post of postsList; track post.id) {
-<h3>{{ post.name}}</h3>
-
-<img [src]="'data:image/jpeg;base64,' + post.photoPath" width="300" style="height:auto;" />
-
-
-<h2>{{post.user.name}}</h2>
-
-  <button (click)="seeFullPost(post.id)">see full post</button>
-
-}
-} -->
 <!-- ⭐ תיבת חיפוש חדשה -->
 <div class="search-container">
   <div class="search-box">
@@ -26,20 +12,31 @@
     <button (click)="onSearch()" class="search-btn" [disabled]="isSearching">
       {{ isSearching ? 'Searching...' : 'Search' }}
     </button>
-    <button 
-      *ngIf="searchKeyword" 
+    @if(searchKeyword){
+
+      <button 
       (click)="clearSearch()" 
       class="clear-btn"
-    >
+      >
       ✕
     </button>
+  }
   </div>
 </div>
 
+<!-- ⭐ תיבת מיון -->
+<select (change)="onSortChange($event)" class="sort-select">
+  <option value="">Sort Songs</option>
+  <option value="rating">By Rating</option>
+  <option value="date">By Date</option>
+</select>
+
 <!-- ⭐ הודעה אם אין תוצאות -->
-<div *ngIf="postsList && postsList.length === 0" class="no-results">
-  <p>No songs found for "{{ searchKeyword }}"</p>
-</div>
+ @if(postsList && postsList.length === 0){
+   <div class="no-results">
+     <p>No songs found for "{{ searchKeyword }}"</p>
+    </div>
+  }
 
 <!-- ⭐ רשימת הפוסטים -->
 <div class="posts-grid">

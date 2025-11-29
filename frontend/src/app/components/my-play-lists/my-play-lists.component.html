@@ -1,4 +1,7 @@
 <p>my-play-lists works!</p>
+@if(this.message!=""){
+    <h3>{{message}}</h3>
+}
 @if(playLists){
     @for(playList of playLists; track playList.id){
 

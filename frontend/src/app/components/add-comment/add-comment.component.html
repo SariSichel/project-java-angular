@@ -1,38 +1,6 @@
-<!-- <p>add-comment works!</p>
-<div>
-    <form #CommentForm="ngForm">
-
-        <label>comment text:</label>
-        <input type="text" [(ngModel)]="newComment.text" name="text" minlength="2" maxlength="300" required #textId="ngModel">
-        @if(textId.errors){
-            @if(textId.errors['minlength']){
-                <span>your comment is too short</span>
-            }
-            @if(textId.errors['maxlength']){
-                <span>your comment is too long</span>
-            }
-            @if(textId.errors['required']){
-                <span>you have to enter the comment text</span>
-            }
-        }
-        <br><br>
-        
-        <label>rating</label>
-        <input type="number" [(ngModel)]="newComment.rating" name="rating" min="1" max="5" required #ratingId="ngModel">
-        @if(ratingId.errors){       
-            @if(ratingId.errors['min']){
-                <span>rating must be at least 1</span>
-            }
-            @if(ratingId.errors['max']){
-                <span>rating cannot be more than 5</span>
-            }
-            @if(ratingId.errors['required']){
-                <span>you have to enter a rating</span>
-            }
-        }
-
-    </form>
-    <button (click)="addComment()" [disabled]="CommentForm.invalid">Add Comment</button> -->
+@if(this.message!=""){
+    <h3>{{message}}</h3>
+}
 
     <p>add-comment works!</p>
 <div>

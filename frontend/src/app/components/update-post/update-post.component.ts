@@ -17,7 +17,7 @@ import { CategoriesService } from '../../services/categories.service';
 export class UpdatePostComponent{
 
   constructor(private categoryService: CategoriesService, private postService: PostsService,private route: ActivatedRoute) { }
-
+public message:string=""
   public post!: Post; 
   public audioUrl: string | null = null;
   public selectedPhoto: File | null = null;
@@ -102,11 +102,12 @@ export class UpdatePostComponent{
 
     this.postService.updatePost(formData).subscribe({
       next: (res) => {
-        alert("the poster updated successfully!");
+        this.message="the poster updated successfully!"
       },
       error: (err) => {
        console.error('Update failed:', err);
-       alert('Failed to update post');      }
+        this.message="Failed to update post"   
+       }
     });
   }
 

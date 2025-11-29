@@ -14,7 +14,7 @@ import { FormsModule } from '@angular/forms';
 export class PersonalAreaComponent {
 
   constructor(private userService: UserService, private route: ActivatedRoute) { }
-
+public message:string=""
   public user!: User;  // רק משתנה אחד!
   public selectedPhoto: File | null = null;
 
@@ -54,7 +54,7 @@ export class PersonalAreaComponent {
 
     this.userService.updateUser(formData).subscribe({
       next: (res) => {
-        alert("The user updated successfully!");
+        this.message="The user updated successfully!"
       },
       error: (err) => {
         // בדוק אם הסטטוס הוא 200 למרות השגיאה

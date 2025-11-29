@@ -1,6 +1,9 @@
 
 <div class="my-posts-container">
     <h2>my posts</h2>
+    @if(this.message!=""){
+    <h3>{{message}}</h3>
+}
 
     @if(posts && posts.length > 0) {
         @for(post of posts; track post.id){

@@ -16,7 +16,7 @@ import { CommonModule } from '@angular/common';
 })
 
 export class FullPostComponent {
-
+message:string=""
  playLists!:PlayList[]
  showPlayList:boolean=false
  selectedPlayListId!: number 
@@ -111,20 +111,21 @@ isPostInPlayList(playListId: number, postId: number): boolean {
     // בדיקה אם הפוסט כבר קיים בפלייליסט
     //משום מה הבדיקה לא עובדת או שהפונקציה לא עובדת- יש לבדוק את זה
       if (this.isPostInPlayList(+playListId, postId)) {
-      alert('This post already exists in the selected playlist!');
+        
+      this.message = 'This post already exists in the selected playlist!';
       selectElement.value = ''; // אפס את הבחירה
       return;
     }
 
     this.playListService.addPostToPlayListOnServer(+playListId, postId).subscribe({
       next: (res) => {
-        alert('Post added to playlist successfully!');
+        this.message = 'Post added to playlist successfully!';
         this.showPlayList = false;
         selectElement.value = ''; // אפס את הבחירה
       },
       error: (err) => {
         console.error('Error adding post to playlist:', err);
-        alert('Failed to add post to playlist');
+        this.message = 'Failed to add post to playlist';
       }
     });
   }
@@ -138,7 +139,7 @@ newPlayList() {
 addPlayList() {
   // בדיקה שהשם לא ריק
   if (!this.playList.name || this.playList.name.trim() === '') {
-    alert("Please enter a playlist name");
+    this.message = "Please enter a playlist name";
     return;
   }
 
@@ -158,7 +159,7 @@ addPlayList() {
       // שלב 2: הוסף את הפוסט לפלייליסט החדש
       this.playListService.addPostToPlayListOnServer(createdPlayList.id, this.post.id).subscribe({
         next: (res) => {
-          alert("PlayList created and post added successfully!");
+          this.message = "PlayList created and post added successfully!";
           this.newPlayListClicked = false;
           this.showPlayList = false;
           
@@ -174,13 +175,13 @@ addPlayList() {
         },
         error: (err) => {
           console.error('Error adding post to new playlist:', err);
-          alert("Playlist created but failed to add post");
+          this.message = "Playlist created but failed to add post";
         }
       });
     },
     error: (err) => {
       console.error('Error creating playlist:', err);
-      alert("Failed to create PlayList. Check console for details.");
+      this.message = "Failed to create PlayList. Check console for details.";
     }
   });
 }

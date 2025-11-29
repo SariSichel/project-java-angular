@@ -14,6 +14,7 @@ import { ActivatedRoute } from '@angular/router';
 export class AddCommentComponent {
 
   hoverRating: number = 0;
+  message: string=""
 
   constructor(private route: ActivatedRoute, private commentService: CommentService) { }
 
@@ -41,11 +42,11 @@ export class AddCommentComponent {
     // שלח את אובייקט התגובה ישירות כ-JSON
     this.commentService.addCommentToServer(this.newComment).subscribe({
       next: (res) => {
-        alert("Comment added successfully!");
+        this.message = "Comment added successfully!";
       },
       error: (err) => {
         console.error(err);   
-        alert("Failed to add comment");
+        this.message = "Failed to add comment.";
       }
     });
   }

@@ -1,5 +1,7 @@
 
-
+@if(this.message!=""){
+    <h3>{{message}}</h3>
+}
 <nav>
  <button (click)="signIn()">sign in</button>
  <button (click)="signUp()">sign up</button>

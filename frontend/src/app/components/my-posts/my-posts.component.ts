@@ -14,7 +14,7 @@ import Post from '../../model/post.model';
   styleUrl: './my-posts.component.css'
 })
 export class MyPostsComponent implements OnInit {
-
+public message:string=""
   public posts!: Post[];
   public userId!: number; 
   public postIdToDelete: number | null = null; // שמירת ה-ID של הפוסט שמיועד למחיקה
@@ -65,14 +65,14 @@ export class MyPostsComponent implements OnInit {
 
   okDeletePost(postId: number): void {
     this._postService.deletePostFromServer(postId).subscribe({
-      next: (res) => {  
-        alert("Post deleted successfully!");
+      next: (res) => { 
+        this.message="Post deleted successfully!" 
         this.postIdToDelete = null; // איפוס לאחר מחיקה מוצלחת
         this.loadPosts(this.userId);
       },
       error: (err) => {
         console.error("Failed to delete post:", err); 
-        alert("Failed to delete post");
+        this.message="Failed to delete post"
         this.postIdToDelete = null;
       } 
     });

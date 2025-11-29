@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
   styleUrl: './sign-up.component.css'
 })
 export class SignUpComponent {
-
+public message:string=""
   public selectedPhoto: File | null = null;
 
   constructor(private _userService: UserService, private router: Router) { }
@@ -32,7 +32,7 @@ export class SignUpComponent {
 
   signUp() {
     if (!this.selectedPhoto) {
-      alert("Please select photo");
+      this.message
       return;
     }
     const formData = new FormData();
@@ -50,13 +50,13 @@ export class SignUpComponent {
     // שליחה לשרת
     this._userService.signUp(formData).subscribe({
       next: (res) => {
-        alert("User signed up successfully!");
+        this.message="User signed up successfully!"
         console.log(res);
         this.router.navigate(['home']);
       },
       error: (err) => {
         console.error(err);
-        alert("Failed to sign up");
+        this.message="Failed to sign up."
       }
     });
   }

@@ -1,4 +1,7 @@
 <div class="container">
+    @if(this.message!=""){
+    <h3>{{message}}</h3>
+}
     <form #SignUpForm="ngForm">
         <label>user name:</label>
         <input type="text" [(ngModel)]="newUserSignUp.name" name="name" minlength="2" maxlength="30" required #nameId="ngModel">

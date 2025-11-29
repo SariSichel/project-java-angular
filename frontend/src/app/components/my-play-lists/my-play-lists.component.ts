@@ -10,7 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrl: './my-play-lists.component.css'
 })
 export class MyPlayListsComponent {
-
+public message:string=""
   public playLists!:PlayList[]
   public PlayListIdToDelete: number | null = null;
   
@@ -49,14 +49,15 @@ export class MyPlayListsComponent {
   okDeletePost(playListId: number): void {
     this.playListService.deletePlayListFromServer(playListId).subscribe({
       next: (res) => {
-        alert("PlayList deleted successfully!");
+        this.message
+        // alert("PlayList deleted successfully!");
         // רענון רשימת הפלייליסטים לאחר המחיקה
         this.playLists = this.playLists.filter(pl => pl.id !== playListId);
         this.PlayListIdToDelete = null; // איפוס ה-ID של הפוסט שמיועד למחיקה
       },
       error: (err) => {
         console.error('Error deleting PlayList:', err);
-                alert("Failed to delete PlayList");
+        this.message = "Failed to delete PlayList";
       }
     });
   }

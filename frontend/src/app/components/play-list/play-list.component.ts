@@ -11,7 +11,7 @@ import { PlayListService } from '../../services/play-list.service';
   styleUrl: './play-list.component.css'
 })
 export class PlayListComponent {
-
+message:string=""
   public posts!:Post[];
   public postIdToDelete: number | null = null; // שמירת ה-ID של הפוסט שמיועד למחיקה
   public playListId:number=0;
@@ -44,13 +44,13 @@ export class PlayListComponent {
   okDeletePost(postId: number): void {
     this.playListService.removePostFromPlayListOnServer(this.playListId,postId).subscribe({
       next: (res) => {  
-        alert("Post deleted successfully!");
+        this.message="Post removed from PlayList successfully!"
         this.postIdToDelete = null; // איפוס לאחר מחיקה מוצלחת
         this.posts = this.posts.filter(p => p.id !== postId); // רענון הרשימה לאחר המחיקה
       },
       error: (err) => {
         console.error("Failed to delete post:", err); 
-        alert("Failed to delete post");
+        this.message="Failed to remove post from PlayList"
         this.postIdToDelete = null;
       } 
     });

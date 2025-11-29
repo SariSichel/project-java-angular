@@ -1,5 +1,8 @@
 @if(post){
     <div>
+        @if(this.message!=""){
+    <h3>{{message}}</h3>
+}
 <form #postForm="ngForm">
     <label>post title:</label>
     <input type="text" [(ngModel)]="post.name" name="name" minlength="2" maxlength="100" required #postnameId="ngModel">
